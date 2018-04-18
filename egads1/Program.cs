@@ -16,7 +16,12 @@ namespace egads1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            MainView view = new MainView();
+            MainController controller = new MainController(view);
+            view.Controller = controller;
+
+            Application.Run(view);
         }
     }
 }

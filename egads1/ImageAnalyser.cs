@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace egads1
 {
-    class controller
+    class ImageAnalyser
     {
     }
 }
