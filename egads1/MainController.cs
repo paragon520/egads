@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace egads1
         public MainController(MainView m_mainView)
         {
             mainView = m_mainView;
+            mainAnalyser = new ImageAnalyser();
+            sideAnalyser = new ImageAnalyser();
         }
 
         public void setCameraControllers(TIS.Imaging.ICImagingControl mainIC, TIS.Imaging.ICImagingControl sideIC)
@@ -55,5 +58,26 @@ namespace egads1
                     break;
             }
         }
+
+        public void imageAvailableMain(string filename)
+        {
+            //Bitmap temp = new Bitmap(filename);
+            //mainView.postImageMain(temp);
+
+            ImageAnalysis temp = mainAnalyser.analyse(filename);
+
+            mainView.postImageMain(temp.Result);
+
+        }
+
+        public void imageAvailableSide(string filename)
+        {
+            //Bitmap temp = new Bitmap(filename);
+            //mainView.postImageSide(temp);
+
+            ImageAnalysis temp = sideAnalyser.analyse(filename);
+            mainView.postImageSide(temp.Result);
+        }
+
     }
 }

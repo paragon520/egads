@@ -15,6 +15,10 @@ namespace egads1
 {
     public partial class MainView : Form
     {
+        public const string TEMPIMAGEMAIN = "tmpMain.bmp";
+        public const string TEMPIMAGESIDE = "tmpSide.bmp";
+
+
         private MainController controller;
 
         public MainView()
@@ -56,5 +60,47 @@ namespace egads1
         {
             controller.command(Command.ToggleCamTrigger);
         }
+
+        private void icMain_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
+        {
+            if (icMain.InvokeRequired)
+                icMain.Invoke(new icMain_ImageAvailable_delegate(icMain_ImageAvailable), sender, e);
+            else
+            {
+                icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN);
+                controller.imageAvailableMain(TEMPIMAGEMAIN);
+            }
+        }
+        private delegate void icMain_ImageAvailable_delegate(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e);
+
+        private void icSide_ImageAvailable(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e)
+        {
+            if (icSide.InvokeRequired)
+                icSide.Invoke(new icSide_ImageAvailable_delegate(icSide_ImageAvailable), sender, e);
+            else
+            {
+                icSide.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGESIDE);
+                controller.imageAvailableSide(TEMPIMAGESIDE);
+            }
+        }
+        private delegate void icSide_ImageAvailable_delegate(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e);
+
+        public void postImageMain(Bitmap image)
+        {
+            if (pbMain.InvokeRequired)
+                pbMain.Invoke(new postImageMainDelegate(postImageMain), image);
+            else
+                pbMain.Image = image;
+        }
+        private delegate void postImageMainDelegate(Bitmap image);
+
+        public void postImageSide(Bitmap image)
+        {
+            if (pbSide.InvokeRequired)
+                pbSide.Invoke(new postImageMainDelegate(postImageSide), image);
+            else
+                pbSide.Image = image;
+        }
+        private delegate void postImageSideDelegate(Bitmap image);
     }
 }

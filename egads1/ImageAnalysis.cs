@@ -9,6 +9,7 @@ using Emgu.CV.Structure;
 using Emgu.CV.UI;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Util;
+using System.Drawing;
 
 namespace egads1
 {
@@ -23,6 +24,7 @@ namespace egads1
         private float mLength;
         private float mWidth;
         private double mRatio;
+        private Bitmap result;
 
         public ImageAnalysis()
         {
@@ -59,5 +61,6 @@ namespace egads1
         public float Length { get => mLength; set => mLength = value; }
         public float Width { get => mWidth; set => mWidth = value; }
         public double Ratio { get => mRatio; set => mRatio = value; }
+        public Bitmap Result { get => result; set => result = value; }
     }
 }

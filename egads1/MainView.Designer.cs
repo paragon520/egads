@@ -59,7 +59,7 @@
             this.tbOutput.Name = "tbOutput";
             this.tbOutput.ReadOnly = true;
             this.tbOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbOutput.Size = new System.Drawing.Size(933, 80);
+            this.tbOutput.Size = new System.Drawing.Size(485, 80);
             this.tbOutput.TabIndex = 0;
             // 
             // icMain
@@ -73,6 +73,7 @@
             this.icMain.Name = "icMain";
             this.icMain.Size = new System.Drawing.Size(240, 180);
             this.icMain.TabIndex = 1;
+            this.icMain.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icMain_ImageAvailable);
             // 
             // icSide
             // 
@@ -85,6 +86,7 @@
             this.icSide.Name = "icSide";
             this.icSide.Size = new System.Drawing.Size(240, 180);
             this.icSide.TabIndex = 2;
+            this.icSide.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icSide_ImageAvailable);
             // 
             // pbMain
             // 
@@ -108,10 +110,10 @@
             // 
             this.tcTabControl.Controls.Add(this.tpConfigPage);
             this.tcTabControl.Controls.Add(this.tpRunPage);
-            this.tcTabControl.Location = new System.Drawing.Point(505, 99);
+            this.tcTabControl.Location = new System.Drawing.Point(505, 13);
             this.tcTabControl.Name = "tcTabControl";
             this.tcTabControl.SelectedIndex = 0;
-            this.tcTabControl.Size = new System.Drawing.Size(441, 366);
+            this.tcTabControl.Size = new System.Drawing.Size(441, 452);
             this.tcTabControl.TabIndex = 5;
             // 
             // tpConfigPage
@@ -120,7 +122,7 @@
             this.tpConfigPage.Location = new System.Drawing.Point(4, 22);
             this.tpConfigPage.Name = "tpConfigPage";
             this.tpConfigPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tpConfigPage.Size = new System.Drawing.Size(433, 340);
+            this.tpConfigPage.Size = new System.Drawing.Size(433, 426);
             this.tpConfigPage.TabIndex = 0;
             this.tpConfigPage.Text = "Config";
             this.tpConfigPage.UseVisualStyleBackColor = true;

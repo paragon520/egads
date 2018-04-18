@@ -25,6 +25,7 @@ namespace egads1
             try
             {
                 camera.LoadDeviceStateFromFile(configFile, true); //attempts to load camera config file
+                camera.DeviceTrigger = true;
                 start(); // starts the live feed to the user interface
             }
             catch { } // do nothing if the above code produces errors
