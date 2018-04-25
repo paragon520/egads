@@ -36,13 +36,36 @@
             this.pbSide = new System.Windows.Forms.PictureBox();
             this.tcTabControl = new System.Windows.Forms.TabControl();
             this.tpConfigPage = new System.Windows.Forms.TabPage();
-            this.tpRunPage = new System.Windows.Forms.TabPage();
             this.gbCamSettings = new System.Windows.Forms.GroupBox();
             this.btTriggerToggle = new System.Windows.Forms.Button();
             this.btConnectCamSide = new System.Windows.Forms.Button();
             this.btCamSettingsSide = new System.Windows.Forms.Button();
             this.btConnectCamTop = new System.Windows.Forms.Button();
             this.btCamSettingsTop = new System.Windows.Forms.Button();
+            this.tpRunPage = new System.Windows.Forms.TabPage();
+            this.gbRecord = new System.Windows.Forms.GroupBox();
+            this.lbRecordFilename = new System.Windows.Forms.Label();
+            this.btRecordStop = new System.Windows.Forms.Button();
+            this.btRecordStart = new System.Windows.Forms.Button();
+            this.tbRecordFilename = new System.Windows.Forms.TextBox();
+            this.gbCalibrationCreate = new System.Windows.Forms.GroupBox();
+            this.button8 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.btCalibrationA = new System.Windows.Forms.Button();
+            this.gbCalibrationLoad = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.button9 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.icMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.icSide)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
@@ -50,6 +73,11 @@
             this.tcTabControl.SuspendLayout();
             this.tpConfigPage.SuspendLayout();
             this.gbCamSettings.SuspendLayout();
+            this.tpRunPage.SuspendLayout();
+            this.gbRecord.SuspendLayout();
+            this.gbCalibrationCreate.SuspendLayout();
+            this.gbCalibrationLoad.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbOutput
@@ -118,6 +146,8 @@
             // 
             // tpConfigPage
             // 
+            this.tpConfigPage.Controls.Add(this.gbCalibrationLoad);
+            this.tpConfigPage.Controls.Add(this.gbCalibrationCreate);
             this.tpConfigPage.Controls.Add(this.gbCamSettings);
             this.tpConfigPage.Location = new System.Drawing.Point(4, 22);
             this.tpConfigPage.Name = "tpConfigPage";
@@ -126,16 +156,6 @@
             this.tpConfigPage.TabIndex = 0;
             this.tpConfigPage.Text = "Config";
             this.tpConfigPage.UseVisualStyleBackColor = true;
-            // 
-            // tpRunPage
-            // 
-            this.tpRunPage.Location = new System.Drawing.Point(4, 22);
-            this.tpRunPage.Name = "tpRunPage";
-            this.tpRunPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tpRunPage.Size = new System.Drawing.Size(433, 340);
-            this.tpRunPage.TabIndex = 1;
-            this.tpRunPage.Text = "Run ";
-            this.tpRunPage.UseVisualStyleBackColor = true;
             // 
             // gbCamSettings
             // 
@@ -201,6 +221,254 @@
             this.btCamSettingsTop.UseVisualStyleBackColor = true;
             this.btCamSettingsTop.Click += new System.EventHandler(this.btCamSettingsTop_Click);
             // 
+            // tpRunPage
+            // 
+            this.tpRunPage.Controls.Add(this.groupBox1);
+            this.tpRunPage.Controls.Add(this.gbRecord);
+            this.tpRunPage.Location = new System.Drawing.Point(4, 22);
+            this.tpRunPage.Name = "tpRunPage";
+            this.tpRunPage.Padding = new System.Windows.Forms.Padding(3);
+            this.tpRunPage.Size = new System.Drawing.Size(433, 426);
+            this.tpRunPage.TabIndex = 1;
+            this.tpRunPage.Text = "Run ";
+            this.tpRunPage.UseVisualStyleBackColor = true;
+            // 
+            // gbRecord
+            // 
+            this.gbRecord.Controls.Add(this.lbRecordFilename);
+            this.gbRecord.Controls.Add(this.btRecordStop);
+            this.gbRecord.Controls.Add(this.btRecordStart);
+            this.gbRecord.Controls.Add(this.tbRecordFilename);
+            this.gbRecord.Location = new System.Drawing.Point(6, 6);
+            this.gbRecord.Name = "gbRecord";
+            this.gbRecord.Size = new System.Drawing.Size(143, 91);
+            this.gbRecord.TabIndex = 6;
+            this.gbRecord.TabStop = false;
+            this.gbRecord.Text = "Record to Data File";
+            // 
+            // lbRecordFilename
+            // 
+            this.lbRecordFilename.AutoSize = true;
+            this.lbRecordFilename.Location = new System.Drawing.Point(7, 20);
+            this.lbRecordFilename.Name = "lbRecordFilename";
+            this.lbRecordFilename.Size = new System.Drawing.Size(54, 13);
+            this.lbRecordFilename.TabIndex = 3;
+            this.lbRecordFilename.Text = "File Name";
+            // 
+            // btRecordStop
+            // 
+            this.btRecordStop.Location = new System.Drawing.Point(80, 62);
+            this.btRecordStop.Name = "btRecordStop";
+            this.btRecordStop.Size = new System.Drawing.Size(57, 23);
+            this.btRecordStop.TabIndex = 2;
+            this.btRecordStop.Text = "Stop";
+            this.btRecordStop.UseVisualStyleBackColor = true;
+            this.btRecordStop.Click += new System.EventHandler(this.btRecordStop_Click);
+            // 
+            // btRecordStart
+            // 
+            this.btRecordStart.Location = new System.Drawing.Point(6, 62);
+            this.btRecordStart.Name = "btRecordStart";
+            this.btRecordStart.Size = new System.Drawing.Size(57, 23);
+            this.btRecordStart.TabIndex = 1;
+            this.btRecordStart.Text = "Start";
+            this.btRecordStart.UseVisualStyleBackColor = true;
+            this.btRecordStart.Click += new System.EventHandler(this.btRecordStart_Click);
+            // 
+            // tbRecordFilename
+            // 
+            this.tbRecordFilename.Location = new System.Drawing.Point(6, 36);
+            this.tbRecordFilename.Name = "tbRecordFilename";
+            this.tbRecordFilename.Size = new System.Drawing.Size(131, 20);
+            this.tbRecordFilename.TabIndex = 0;
+            this.tbRecordFilename.Text = "data.csv";
+            // 
+            // gbCalibrationCreate
+            // 
+            this.gbCalibrationCreate.Controls.Add(this.label5);
+            this.gbCalibrationCreate.Controls.Add(this.label4);
+            this.gbCalibrationCreate.Controls.Add(this.label1);
+            this.gbCalibrationCreate.Controls.Add(this.button8);
+            this.gbCalibrationCreate.Controls.Add(this.label2);
+            this.gbCalibrationCreate.Controls.Add(this.textBox3);
+            this.gbCalibrationCreate.Controls.Add(this.button5);
+            this.gbCalibrationCreate.Controls.Add(this.button4);
+            this.gbCalibrationCreate.Controls.Add(this.button3);
+            this.gbCalibrationCreate.Controls.Add(this.btCalibrationA);
+            this.gbCalibrationCreate.Location = new System.Drawing.Point(155, 6);
+            this.gbCalibrationCreate.Name = "gbCalibrationCreate";
+            this.gbCalibrationCreate.Size = new System.Drawing.Size(143, 240);
+            this.gbCalibrationCreate.TabIndex = 33;
+            this.gbCalibrationCreate.TabStop = false;
+            this.gbCalibrationCreate.Text = "Create Calibration";
+            this.gbCalibrationCreate.Visible = false;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(7, 205);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(130, 23);
+            this.button8.TabIndex = 6;
+            this.button8.Text = "Save Calibration";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 158);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(84, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Save Calibration";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(7, 178);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(130, 20);
+            this.textBox3.TabIndex = 4;
+            this.textBox3.Text = "calibration.cal";
+            // 
+            // button5
+            // 
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(76, 80);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(59, 23);
+            this.button5.TabIndex = 3;
+            this.button5.Text = "Stop";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(7, 80);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(59, 23);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "Start";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(76, 35);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(60, 23);
+            this.button3.TabIndex = 1;
+            this.button3.Text = "Stop";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // btCalibrationA
+            // 
+            this.btCalibrationA.Location = new System.Drawing.Point(6, 35);
+            this.btCalibrationA.Name = "btCalibrationA";
+            this.btCalibrationA.Size = new System.Drawing.Size(60, 23);
+            this.btCalibrationA.TabIndex = 0;
+            this.btCalibrationA.Text = "Start";
+            this.btCalibrationA.UseVisualStyleBackColor = true;
+            // 
+            // gbCalibrationLoad
+            // 
+            this.gbCalibrationLoad.Controls.Add(this.label3);
+            this.gbCalibrationLoad.Controls.Add(this.button9);
+            this.gbCalibrationLoad.Location = new System.Drawing.Point(155, 252);
+            this.gbCalibrationLoad.Name = "gbCalibrationLoad";
+            this.gbCalibrationLoad.Size = new System.Drawing.Size(143, 73);
+            this.gbCalibrationLoad.TabIndex = 34;
+            this.gbCalibrationLoad.TabStop = false;
+            this.gbCalibrationLoad.Text = "Load Calibration";
+            this.gbCalibrationLoad.Visible = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 50);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "2018-02-10-a.cal";
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(6, 19);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(130, 23);
+            this.button9.TabIndex = 7;
+            this.button9.Text = "Load Calibration";
+            this.button9.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButton3);
+            this.groupBox1.Controls.Add(this.radioButton2);
+            this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.Location = new System.Drawing.Point(155, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(143, 90);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Mode";
+            this.groupBox1.Visible = false;
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(7, 68);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(44, 17);
+            this.radioButton3.TabIndex = 2;
+            this.radioButton3.Text = "Sort";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(7, 44);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(48, 17);
+            this.radioButton2.TabIndex = 1;
+            this.radioButton2.Text = "Data";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
+            this.radioButton1.Location = new System.Drawing.Point(7, 20);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(74, 17);
+            this.radioButton1.TabIndex = 0;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Calibration";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Record Sample A";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 64);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(90, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Record Sample B";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(10, 120);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "label5";
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,6 +491,15 @@
             this.tcTabControl.ResumeLayout(false);
             this.tpConfigPage.ResumeLayout(false);
             this.gbCamSettings.ResumeLayout(false);
+            this.tpRunPage.ResumeLayout(false);
+            this.gbRecord.ResumeLayout(false);
+            this.gbRecord.PerformLayout();
+            this.gbCalibrationCreate.ResumeLayout(false);
+            this.gbCalibrationCreate.PerformLayout();
+            this.gbCalibrationLoad.ResumeLayout(false);
+            this.gbCalibrationLoad.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,6 +521,29 @@
         private System.Windows.Forms.Button btConnectCamTop;
         private System.Windows.Forms.Button btCamSettingsTop;
         private System.Windows.Forms.TabPage tpRunPage;
+        private System.Windows.Forms.GroupBox gbRecord;
+        private System.Windows.Forms.Label lbRecordFilename;
+        private System.Windows.Forms.Button btRecordStop;
+        private System.Windows.Forms.Button btRecordStart;
+        private System.Windows.Forms.TextBox tbRecordFilename;
+        private System.Windows.Forms.GroupBox gbCalibrationLoad;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.GroupBox gbCalibrationCreate;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btCalibrationA;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }
 

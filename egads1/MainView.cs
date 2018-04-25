@@ -102,5 +102,29 @@ namespace egads1
                 pbSide.Image = image;
         }
         private delegate void postImageSideDelegate(Bitmap image);
+
+        private void btRecordStart_Click(object sender, EventArgs e)
+        {
+            controller.command(Command.RecordStart, tbRecordFilename.Text);
+
+        }
+
+        private void btRecordStop_Click(object sender, EventArgs e)
+        {
+            controller.command(Command.RecordStop, tbRecordFilename.Text);
+        }
+
+        public void displayData(string s)
+        {
+            if (tbOutput.InvokeRequired)
+            {
+                tbOutput.Invoke(new displayDataDelegate(displayData), s);
+            }
+            else
+            {
+                tbOutput.AppendText(s + "\n");
+            }
+        }
+        private delegate void displayDataDelegate(string s);
     }
 }

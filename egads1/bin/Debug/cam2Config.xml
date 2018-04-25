@@ -71,7 +71,7 @@
                     <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" />
                 </element>
                 <element guid="{C337CFB8-EA08-4E69-A655-586937B6AFEC}" name="Delay">
-                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="3.099999904632568359375" />
+                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="1000." />
                 </element>
                 <element guid="{BE0B5BDC-0B1D-4F75-B512-4F17A047671E}" name="IMX Low-Latency Mode">
                     <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" />

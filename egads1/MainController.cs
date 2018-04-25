@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace egads1
 {
-    public enum State { }
-    public enum Command {MainCamConnect, MainCamSettings, SideCamConnect, SideCamSettings, ToggleCamTrigger }
+    public enum State { Idle, DataRecord, }
+    public enum Command {MainCamConnect, MainCamSettings, SideCamConnect, SideCamSettings, ToggleCamTrigger, RecordStart, RecordStop }
 
     class MainController
     {
@@ -18,7 +18,7 @@ namespace egads1
         ImageAnalyser mainAnalyser;
         ImageAnalyser sideAnalyser;
         RunData currentRun;
-
+        State currentState;
 
 
         public MainController(MainView m_mainView)
@@ -26,6 +26,8 @@ namespace egads1
             mainView = m_mainView;
             mainAnalyser = new ImageAnalyser();
             sideAnalyser = new ImageAnalyser();
+            currentRun = new RunData();
+            currentState = State.Idle;
         }
 
         public void setCameraControllers(TIS.Imaging.ICImagingControl mainIC, TIS.Imaging.ICImagingControl sideIC)
@@ -34,7 +36,7 @@ namespace egads1
             sideCamera = new CameraController(sideIC, "cam2Config.xml");
         }
 
-        public void command(Command c)
+        public void command(Command c, string filename = "data.csv")
         {
             switch (c)
             {
@@ -56,6 +58,14 @@ namespace egads1
                     mainCamera.toggleTriggerMode();
                     sideCamera.toggleTriggerMode();
                     break;
+                case Command.RecordStart:
+                    currentState = State.DataRecord;
+                    break;
+                case Command.RecordStop:
+                    currentState = State.Idle;
+                    currentRun.setOutputFile(filename);
+                    currentRun.close();
+                    break;
             }
         }
 
@@ -64,9 +74,16 @@ namespace egads1
             //Bitmap temp = new Bitmap(filename);
             //mainView.postImageMain(temp);
 
-            ImageAnalysis temp = mainAnalyser.analyse(filename);
+            ImageAnalysis tempAnalysis = mainAnalyser.analyse(filename); //Move to thread task?
+            mainView.postImageMain(tempAnalysis.Result);
 
-            mainView.postImageMain(temp.Result);
+            if(currentState == State.DataRecord)
+                currentRun.add(tempAnalysis);
+
+            string output = "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+            output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+
+            mainView.displayData(output);
 
         }
 
@@ -75,8 +92,14 @@ namespace egads1
             //Bitmap temp = new Bitmap(filename);
             //mainView.postImageSide(temp);
 
-            ImageAnalysis temp = sideAnalyser.analyse(filename);
-            mainView.postImageSide(temp.Result);
+            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename);
+            mainView.postImageSide(tempAnalysis2.Result);
+
+
+            string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
+            output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
+
+            mainView.displayData(output);
         }
 
     }
