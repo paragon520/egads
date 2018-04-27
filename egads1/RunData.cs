@@ -11,6 +11,8 @@ namespace egads1
     class RunData
     {
         //make this thing hold pairs of imagaAnalysises with timestamps
+        // merge the analysis pairs into bigger sets with volume, and stuff
+        // will likely need a new data holder class for it.
 
         List<ImageAnalysis> store;
         string outputFile;

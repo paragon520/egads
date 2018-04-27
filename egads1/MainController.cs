@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace egads1
 {
-    public enum State { Idle, DataRecord, }
-    public enum Command {MainCamConnect, MainCamSettings, SideCamConnect, SideCamSettings, ToggleCamTrigger, RecordStart, RecordStop }
+    public enum State { Idle, DataRecord, SampleARecord, SampleBRecord, Sort}
+    public enum Command {MainCamConnect, MainCamSettings, SideCamConnect, SideCamSettings, ToggleCamTrigger,
+        RecordStart, RecordStop, RecordAStart, RecordAStop, RecordBStart, RecordBStop, MakeCalibration }
 
     class MainController
     {
@@ -18,6 +19,8 @@ namespace egads1
         ImageAnalyser mainAnalyser;
         ImageAnalyser sideAnalyser;
         RunData currentRun;
+        RunData runSampleA;
+        RunData runSampleB;
         State currentState;
 
 
@@ -41,31 +44,73 @@ namespace egads1
             switch (c)
             {
                 case Command.MainCamConnect:
-                    mainCamera.OpenVideoCaptureDevice();
-                    mainCamera.restart();
-                    break;
+                    {
+                        mainCamera.OpenVideoCaptureDevice();
+                        mainCamera.restart();
+                        break;
+                    }
                 case Command.MainCamSettings:
-                    mainCamera.ShowDeviceProperties();
-                    break;
+                    {
+                        mainCamera.ShowDeviceProperties();
+                        break;
+                    }
                 case Command.SideCamConnect:
-                    sideCamera.OpenVideoCaptureDevice();
-                    sideCamera.restart();
-                    break;
+                    {
+                        sideCamera.OpenVideoCaptureDevice();
+                        sideCamera.restart();
+                        break;
+                    }
                 case Command.SideCamSettings:
-                    sideCamera.ShowDeviceProperties();
-                    break;
+                    {
+                        sideCamera.ShowDeviceProperties();
+                        break;
+                    }
                 case Command.ToggleCamTrigger:
-                    mainCamera.toggleTriggerMode();
-                    sideCamera.toggleTriggerMode();
-                    break;
+                    {
+                        mainCamera.toggleTriggerMode();
+                        sideCamera.toggleTriggerMode();
+                        break;
+                    }
                 case Command.RecordStart:
-                    currentState = State.DataRecord;
-                    break;
+                    {
+                        currentState = State.DataRecord;
+                        break;
+                    }
                 case Command.RecordStop:
-                    currentState = State.Idle;
-                    currentRun.setOutputFile(filename);
-                    currentRun.close();
-                    break;
+                    {
+                        currentState = State.Idle;
+                        currentRun.setOutputFile(filename);
+                        currentRun.close();
+                        break;
+                    }
+                case Command.RecordAStart:
+                    {
+                        currentState = State.SampleARecord;
+                        runSampleA = new RunData();
+                        runSampleA.setOutputFile("sampleA.csv");
+                        break;
+                    }
+                case Command.RecordAStop:
+                    {
+                        currentState = State.Idle;
+                        break;
+                    }
+                case Command.RecordBStart:
+                    {
+                        currentState = State.SampleBRecord;
+                        runSampleA.setOutputFile("sampleB.csv");
+                        runSampleB = new RunData();
+                        break;
+                    }
+                case Command.RecordBStop:
+                    {
+                        currentState = State.Idle;
+                        break;
+                    }
+                case Command.MakeCalibration:
+                    {
+                        break;
+                    }
             }
         }
 
@@ -76,15 +121,32 @@ namespace egads1
 
             ImageAnalysis tempAnalysis = mainAnalyser.analyse(filename); //Move to thread task?
             mainView.postImageMain(tempAnalysis.Result);
-
-            if(currentState == State.DataRecord)
-                currentRun.add(tempAnalysis);
-
-            string output = "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
-            output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
-
+            
+            string output = "";
+            switch(currentState)
+            {
+                case State.SampleARecord:
+                    runSampleA.add(tempAnalysis);
+                    output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+                    output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+                    break;
+                case State.SampleBRecord:
+                    runSampleB.add(tempAnalysis);
+                    output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+                    output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+                    break;
+                case State.DataRecord:
+                    currentRun.add(tempAnalysis);
+                    output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+                    output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+                    break;
+                case State.Idle:
+                    output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+                    output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+                    break;
+            }
+            
             mainView.displayData(output);
-
         }
 
         public void imageAvailableSide(string filename)
@@ -94,13 +156,11 @@ namespace egads1
 
             ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename);
             mainView.postImageSide(tempAnalysis2.Result);
-
-
+            
             string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
             output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
 
             mainView.displayData(output);
         }
-
     }
 }

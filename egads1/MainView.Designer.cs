@@ -49,23 +49,25 @@
             this.btRecordStart = new System.Windows.Forms.Button();
             this.tbRecordFilename = new System.Windows.Forms.TextBox();
             this.gbCalibrationCreate = new System.Windows.Forms.GroupBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.btCalibrationA = new System.Windows.Forms.Button();
+            this.btCalibrationSave = new System.Windows.Forms.Button();
+            this.lbCalibrationSaveFile = new System.Windows.Forms.Label();
+            this.tbCalibrationSaveFile = new System.Windows.Forms.TextBox();
+            this.btCalibrationBStop = new System.Windows.Forms.Button();
+            this.btCalibrationBStart = new System.Windows.Forms.Button();
+            this.btCalibrationAStop = new System.Windows.Forms.Button();
+            this.btCalibrationAStart = new System.Windows.Forms.Button();
             this.gbCalibrationLoad = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button9 = new System.Windows.Forms.Button();
+            this.lbCalibrationLoaded = new System.Windows.Forms.Label();
+            this.btCalibrationLoad = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lbRecordSampleA = new System.Windows.Forms.Label();
+            this.lbRecordSampleB = new System.Windows.Forms.Label();
+            this.lbRejectOptions = new System.Windows.Forms.Label();
+            this.rbRejectB = new System.Windows.Forms.RadioButton();
+            this.rbRejectA = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.icMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.icSide)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
@@ -285,117 +287,122 @@
             // 
             // gbCalibrationCreate
             // 
-            this.gbCalibrationCreate.Controls.Add(this.label5);
-            this.gbCalibrationCreate.Controls.Add(this.label4);
-            this.gbCalibrationCreate.Controls.Add(this.label1);
-            this.gbCalibrationCreate.Controls.Add(this.button8);
-            this.gbCalibrationCreate.Controls.Add(this.label2);
-            this.gbCalibrationCreate.Controls.Add(this.textBox3);
-            this.gbCalibrationCreate.Controls.Add(this.button5);
-            this.gbCalibrationCreate.Controls.Add(this.button4);
-            this.gbCalibrationCreate.Controls.Add(this.button3);
-            this.gbCalibrationCreate.Controls.Add(this.btCalibrationA);
+            this.gbCalibrationCreate.Controls.Add(this.rbRejectA);
+            this.gbCalibrationCreate.Controls.Add(this.rbRejectB);
+            this.gbCalibrationCreate.Controls.Add(this.lbRejectOptions);
+            this.gbCalibrationCreate.Controls.Add(this.lbRecordSampleB);
+            this.gbCalibrationCreate.Controls.Add(this.lbRecordSampleA);
+            this.gbCalibrationCreate.Controls.Add(this.btCalibrationSave);
+            this.gbCalibrationCreate.Controls.Add(this.lbCalibrationSaveFile);
+            this.gbCalibrationCreate.Controls.Add(this.tbCalibrationSaveFile);
+            this.gbCalibrationCreate.Controls.Add(this.btCalibrationBStop);
+            this.gbCalibrationCreate.Controls.Add(this.btCalibrationBStart);
+            this.gbCalibrationCreate.Controls.Add(this.btCalibrationAStop);
+            this.gbCalibrationCreate.Controls.Add(this.btCalibrationAStart);
             this.gbCalibrationCreate.Location = new System.Drawing.Point(155, 6);
             this.gbCalibrationCreate.Name = "gbCalibrationCreate";
-            this.gbCalibrationCreate.Size = new System.Drawing.Size(143, 240);
+            this.gbCalibrationCreate.Size = new System.Drawing.Size(143, 210);
             this.gbCalibrationCreate.TabIndex = 33;
             this.gbCalibrationCreate.TabStop = false;
             this.gbCalibrationCreate.Text = "Create Calibration";
-            this.gbCalibrationCreate.Visible = false;
             // 
-            // button8
+            // btCalibrationSave
             // 
-            this.button8.Location = new System.Drawing.Point(7, 205);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(130, 23);
-            this.button8.TabIndex = 6;
-            this.button8.Text = "Save Calibration";
-            this.button8.UseVisualStyleBackColor = true;
+            this.btCalibrationSave.Location = new System.Drawing.Point(6, 177);
+            this.btCalibrationSave.Name = "btCalibrationSave";
+            this.btCalibrationSave.Size = new System.Drawing.Size(130, 23);
+            this.btCalibrationSave.TabIndex = 6;
+            this.btCalibrationSave.Text = "Save Calibration";
+            this.btCalibrationSave.UseVisualStyleBackColor = true;
+            this.btCalibrationSave.Click += new System.EventHandler(this.btCalibrationSave_Click);
             // 
-            // label2
+            // lbCalibrationSaveFile
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 158);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Save Calibration";
+            this.lbCalibrationSaveFile.AutoSize = true;
+            this.lbCalibrationSaveFile.Location = new System.Drawing.Point(9, 135);
+            this.lbCalibrationSaveFile.Name = "lbCalibrationSaveFile";
+            this.lbCalibrationSaveFile.Size = new System.Drawing.Size(84, 13);
+            this.lbCalibrationSaveFile.TabIndex = 5;
+            this.lbCalibrationSaveFile.Text = "Save Calibration";
             // 
-            // textBox3
+            // tbCalibrationSaveFile
             // 
-            this.textBox3.Location = new System.Drawing.Point(7, 178);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(130, 20);
-            this.textBox3.TabIndex = 4;
-            this.textBox3.Text = "calibration.cal";
+            this.tbCalibrationSaveFile.Location = new System.Drawing.Point(7, 151);
+            this.tbCalibrationSaveFile.Name = "tbCalibrationSaveFile";
+            this.tbCalibrationSaveFile.Size = new System.Drawing.Size(130, 20);
+            this.tbCalibrationSaveFile.TabIndex = 4;
+            this.tbCalibrationSaveFile.Text = "calibration.cal";
             // 
-            // button5
+            // btCalibrationBStop
             // 
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(76, 80);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(59, 23);
-            this.button5.TabIndex = 3;
-            this.button5.Text = "Stop";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btCalibrationBStop.Enabled = false;
+            this.btCalibrationBStop.Location = new System.Drawing.Point(76, 80);
+            this.btCalibrationBStop.Name = "btCalibrationBStop";
+            this.btCalibrationBStop.Size = new System.Drawing.Size(59, 23);
+            this.btCalibrationBStop.TabIndex = 3;
+            this.btCalibrationBStop.Text = "Stop";
+            this.btCalibrationBStop.UseVisualStyleBackColor = true;
+            this.btCalibrationBStop.Click += new System.EventHandler(this.btCalibrationBStop_Click);
             // 
-            // button4
+            // btCalibrationBStart
             // 
-            this.button4.Location = new System.Drawing.Point(7, 80);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(59, 23);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "Start";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btCalibrationBStart.Location = new System.Drawing.Point(7, 80);
+            this.btCalibrationBStart.Name = "btCalibrationBStart";
+            this.btCalibrationBStart.Size = new System.Drawing.Size(59, 23);
+            this.btCalibrationBStart.TabIndex = 2;
+            this.btCalibrationBStart.Text = "Start";
+            this.btCalibrationBStart.UseVisualStyleBackColor = true;
+            this.btCalibrationBStart.Click += new System.EventHandler(this.btCalibrationBStart_Click);
             // 
-            // button3
+            // btCalibrationAStop
             // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(76, 35);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(60, 23);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "Stop";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btCalibrationAStop.Enabled = false;
+            this.btCalibrationAStop.Location = new System.Drawing.Point(76, 35);
+            this.btCalibrationAStop.Name = "btCalibrationAStop";
+            this.btCalibrationAStop.Size = new System.Drawing.Size(60, 23);
+            this.btCalibrationAStop.TabIndex = 1;
+            this.btCalibrationAStop.Text = "Stop";
+            this.btCalibrationAStop.UseVisualStyleBackColor = true;
+            this.btCalibrationAStop.Click += new System.EventHandler(this.btCalibrationAStop_Click);
             // 
-            // btCalibrationA
+            // btCalibrationAStart
             // 
-            this.btCalibrationA.Location = new System.Drawing.Point(6, 35);
-            this.btCalibrationA.Name = "btCalibrationA";
-            this.btCalibrationA.Size = new System.Drawing.Size(60, 23);
-            this.btCalibrationA.TabIndex = 0;
-            this.btCalibrationA.Text = "Start";
-            this.btCalibrationA.UseVisualStyleBackColor = true;
+            this.btCalibrationAStart.Location = new System.Drawing.Point(6, 35);
+            this.btCalibrationAStart.Name = "btCalibrationAStart";
+            this.btCalibrationAStart.Size = new System.Drawing.Size(60, 23);
+            this.btCalibrationAStart.TabIndex = 0;
+            this.btCalibrationAStart.Text = "Start";
+            this.btCalibrationAStart.UseVisualStyleBackColor = true;
+            this.btCalibrationAStart.Click += new System.EventHandler(this.btCalibrationAStart_Click);
             // 
             // gbCalibrationLoad
             // 
-            this.gbCalibrationLoad.Controls.Add(this.label3);
-            this.gbCalibrationLoad.Controls.Add(this.button9);
-            this.gbCalibrationLoad.Location = new System.Drawing.Point(155, 252);
+            this.gbCalibrationLoad.Controls.Add(this.lbCalibrationLoaded);
+            this.gbCalibrationLoad.Controls.Add(this.btCalibrationLoad);
+            this.gbCalibrationLoad.Location = new System.Drawing.Point(155, 222);
             this.gbCalibrationLoad.Name = "gbCalibrationLoad";
             this.gbCalibrationLoad.Size = new System.Drawing.Size(143, 73);
             this.gbCalibrationLoad.TabIndex = 34;
             this.gbCalibrationLoad.TabStop = false;
             this.gbCalibrationLoad.Text = "Load Calibration";
-            this.gbCalibrationLoad.Visible = false;
             // 
-            // label3
+            // lbCalibrationLoaded
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 50);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "2018-02-10-a.cal";
+            this.lbCalibrationLoaded.AutoSize = true;
+            this.lbCalibrationLoaded.Location = new System.Drawing.Point(6, 50);
+            this.lbCalibrationLoaded.Name = "lbCalibrationLoaded";
+            this.lbCalibrationLoaded.Size = new System.Drawing.Size(72, 13);
+            this.lbCalibrationLoaded.TabIndex = 8;
+            this.lbCalibrationLoaded.Text = "calibration.cal";
             // 
-            // button9
+            // btCalibrationLoad
             // 
-            this.button9.Location = new System.Drawing.Point(6, 19);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(130, 23);
-            this.button9.TabIndex = 7;
-            this.button9.Text = "Load Calibration";
-            this.button9.UseVisualStyleBackColor = true;
+            this.btCalibrationLoad.Location = new System.Drawing.Point(6, 19);
+            this.btCalibrationLoad.Name = "btCalibrationLoad";
+            this.btCalibrationLoad.Size = new System.Drawing.Size(130, 23);
+            this.btCalibrationLoad.TabIndex = 7;
+            this.btCalibrationLoad.Text = "Load Calibration";
+            this.btCalibrationLoad.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -408,7 +415,6 @@
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Mode";
-            this.groupBox1.Visible = false;
             // 
             // radioButton3
             // 
@@ -433,41 +439,61 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(7, 20);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(74, 17);
             this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Calibration";
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // lbRecordSampleA
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Record Sample A";
+            this.lbRecordSampleA.AutoSize = true;
+            this.lbRecordSampleA.Location = new System.Drawing.Point(9, 19);
+            this.lbRecordSampleA.Name = "lbRecordSampleA";
+            this.lbRecordSampleA.Size = new System.Drawing.Size(90, 13);
+            this.lbRecordSampleA.TabIndex = 7;
+            this.lbRecordSampleA.Text = "Record Sample A";
             // 
-            // label4
+            // lbRecordSampleB
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 64);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(90, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Record Sample B";
+            this.lbRecordSampleB.AutoSize = true;
+            this.lbRecordSampleB.Location = new System.Drawing.Point(9, 64);
+            this.lbRecordSampleB.Name = "lbRecordSampleB";
+            this.lbRecordSampleB.Size = new System.Drawing.Size(90, 13);
+            this.lbRecordSampleB.TabIndex = 8;
+            this.lbRecordSampleB.Text = "Record Sample B";
             // 
-            // label5
+            // lbRejectOptions
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 120);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "label5";
+            this.lbRejectOptions.AutoSize = true;
+            this.lbRejectOptions.Location = new System.Drawing.Point(9, 111);
+            this.lbRejectOptions.Name = "lbRejectOptions";
+            this.lbRejectOptions.Size = new System.Drawing.Size(44, 13);
+            this.lbRejectOptions.TabIndex = 9;
+            this.lbRejectOptions.Text = "Reject: ";
+            // 
+            // rbRejectB
+            // 
+            this.rbRejectB.AutoSize = true;
+            this.rbRejectB.Checked = true;
+            this.rbRejectB.Location = new System.Drawing.Point(58, 109);
+            this.rbRejectB.Name = "rbRejectB";
+            this.rbRejectB.Size = new System.Drawing.Size(32, 17);
+            this.rbRejectB.TabIndex = 10;
+            this.rbRejectB.TabStop = true;
+            this.rbRejectB.Text = "B";
+            this.rbRejectB.UseVisualStyleBackColor = true;
+            // 
+            // rbRejectA
+            // 
+            this.rbRejectA.AutoSize = true;
+            this.rbRejectA.Location = new System.Drawing.Point(96, 109);
+            this.rbRejectA.Name = "rbRejectA";
+            this.rbRejectA.Size = new System.Drawing.Size(32, 17);
+            this.rbRejectA.TabIndex = 11;
+            this.rbRejectA.Text = "A";
+            this.rbRejectA.UseVisualStyleBackColor = true;
             // 
             // MainView
             // 
@@ -527,23 +553,25 @@
         private System.Windows.Forms.Button btRecordStart;
         private System.Windows.Forms.TextBox tbRecordFilename;
         private System.Windows.Forms.GroupBox gbCalibrationLoad;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Label lbCalibrationLoaded;
+        private System.Windows.Forms.Button btCalibrationLoad;
         private System.Windows.Forms.GroupBox gbCalibrationCreate;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button btCalibrationA;
+        private System.Windows.Forms.Label lbRejectOptions;
+        private System.Windows.Forms.Label lbRecordSampleB;
+        private System.Windows.Forms.Label lbRecordSampleA;
+        private System.Windows.Forms.Button btCalibrationSave;
+        private System.Windows.Forms.Label lbCalibrationSaveFile;
+        private System.Windows.Forms.TextBox tbCalibrationSaveFile;
+        private System.Windows.Forms.Button btCalibrationBStop;
+        private System.Windows.Forms.Button btCalibrationBStart;
+        private System.Windows.Forms.Button btCalibrationAStop;
+        private System.Windows.Forms.Button btCalibrationAStart;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton rbRejectA;
+        private System.Windows.Forms.RadioButton rbRejectB;
     }
 }
 

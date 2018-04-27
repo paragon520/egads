@@ -126,5 +126,30 @@ namespace egads1
             }
         }
         private delegate void displayDataDelegate(string s);
+
+        private void btCalibrationAStart_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btCalibrationAStop_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btCalibrationBStart_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btCalibrationBStop_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btCalibrationSave_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
