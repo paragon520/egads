@@ -13,16 +13,17 @@ namespace egads1
 
     class MainController
     {
-        MainView mainView;
-        CameraController mainCamera;
-        CameraController sideCamera;
-        ImageAnalyser mainAnalyser;
-        ImageAnalyser sideAnalyser;
-        GrainAnalysis currentGrain;
-        RunData currentRun;
-        RunData runSampleA;
-        RunData runSampleB;
-        State currentState;
+        private MainView mainView;
+        private CameraController mainCamera;
+        private CameraController sideCamera;
+        private ImageAnalyser mainAnalyser;
+        private ImageAnalyser sideAnalyser;
+        private GrainAnalysis currentGrain;
+        private RunData currentRun;
+        private RunData runSampleA;
+        private RunData runSampleB;
+        private State currentState;
+        double threshold;
 
 
         public MainController(MainView m_mainView)
@@ -88,28 +89,31 @@ namespace egads1
                     {
                         currentState = State.SampleARecord;
                         runSampleA = new RunData();
-                        runSampleA.setOutputFile("sampleA.csv");
                         break;
                     }
                 case Command.RecordAStop:
                     {
                         currentState = State.Idle;
+                        runSampleA.setOutputFile("sampleA.csv");
+                        runSampleA.close();
                         break;
                     }
                 case Command.RecordBStart:
                     {
                         currentState = State.SampleBRecord;
-                        runSampleA.setOutputFile("sampleB.csv");
                         runSampleB = new RunData();
                         break;
                     }
                 case Command.RecordBStop:
                     {
                         currentState = State.Idle;
+                        runSampleB.setOutputFile("sampleB.csv");
+                        runSampleB.close();
                         break;
                     }
                 case Command.MakeCalibration:
                     {
+                        calibration(out threshold);
                         break;
                     }
             }
@@ -165,9 +169,11 @@ namespace egads1
                 {
                     case State.SampleARecord:
                         //runSampleA.add(tempAnalysis);
+                        runSampleA.add(currentGrain);
                         break;
                     case State.SampleBRecord:
                         //runSampleB.add(tempAnalysis);
+                        runSampleB.add(currentGrain);
                         break;
                     case State.DataRecord:
                         //currentRun.add(tempAnalysis);
@@ -186,6 +192,81 @@ namespace egads1
 
             mainView.displayData(output);
                 
+        }
+
+
+        private bool calibration(out double m_threshold)
+        {
+            if (runSampleA.Length > 1 && runSampleB.Length > 1)
+            {
+                //calculate average volume of each sample set
+                List<double> volumeSetA = new List<double>();
+                double meanVolumeA = 0;
+                foreach(GrainAnalysis ga in runSampleA.toList)
+                {
+                    meanVolumeA += ga.Volume;
+                    volumeSetA.Add(ga.Volume);
+                }
+                meanVolumeA = meanVolumeA / runSampleA.Length;
+                mainView.displayData("Set A mean: " + meanVolumeA);
+
+                List<double> volumeSetB = new List<double>();
+                double meanVolumeB = 0;
+                foreach (GrainAnalysis ga in runSampleB.toList)
+                {
+                    meanVolumeB += ga.Volume;
+                    volumeSetB.Add(ga.Volume);
+                }
+                meanVolumeB = meanVolumeB / runSampleB.Length;
+                mainView.displayData("Set B mean: " + meanVolumeB);
+
+                //calculate stddev of volume of each sample set
+                double stddevSetA = 0;
+                foreach (double volume in volumeSetA)
+                {
+                    stddevSetA += Math.Pow(volume - meanVolumeA, 2);
+                }
+
+                stddevSetA = Math.Sqrt(stddevSetA / runSampleA.Length);
+                mainView.displayData("Set A standard deviation: " + stddevSetA);
+
+                double stddevSetB = 0;
+                foreach (double volume in volumeSetB)
+                {
+                    stddevSetB += Math.Pow(volume - meanVolumeB, 2);
+                }
+
+                stddevSetB = Math.Sqrt(stddevSetB / runSampleB.Length);
+                mainView.displayData("Set B standard deviation: " + stddevSetB);
+
+                //calculate volume threshold to (halfway between averages)
+                m_threshold = 0;
+
+                if (meanVolumeA < meanVolumeB)
+                {
+                    m_threshold = ((meanVolumeA + stddevSetA) + (meanVolumeB - stddevSetB)) / 2;
+                }
+                else if (meanVolumeA > meanVolumeB)
+                {
+                    m_threshold = ((meanVolumeA - stddevSetA) + (meanVolumeB + stddevSetB)) / 2;
+                }
+                else
+                {
+                    //we have a problem. Samples have same average.
+                    mainView.displayData("Samples have the same volume. Unable to distinguish.");
+                }
+
+                mainView.displayData("Threshold: " + m_threshold);
+
+                //if stddev overlap, this will have low accuracy on sorting.
+
+                return (m_threshold > 0);
+            }
+            else
+            {
+                m_threshold = 0;
+                return false;
+            }
         }
     }
 }

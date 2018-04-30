@@ -82,5 +82,7 @@ namespace egads1
             return Math.Round((decimal)pixels / cbPxPerCbCm * 1000000, 3);
         }
 
+        public int Length { get => store.Count; }
+        public List<GrainAnalysis> toList { get => store; }
     }
 }

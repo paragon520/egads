@@ -335,7 +335,6 @@
             // 
             // btCalibrationBStop
             // 
-            this.btCalibrationBStop.Enabled = false;
             this.btCalibrationBStop.Location = new System.Drawing.Point(76, 80);
             this.btCalibrationBStop.Name = "btCalibrationBStop";
             this.btCalibrationBStop.Size = new System.Drawing.Size(59, 23);
@@ -356,7 +355,6 @@
             // 
             // btCalibrationAStop
             // 
-            this.btCalibrationAStop.Enabled = false;
             this.btCalibrationAStop.Location = new System.Drawing.Point(76, 35);
             this.btCalibrationAStop.Name = "btCalibrationAStop";
             this.btCalibrationAStop.Size = new System.Drawing.Size(60, 23);
