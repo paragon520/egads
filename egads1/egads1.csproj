@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Descrimination.cs" />
+    <Compile Include="GrainAnalysis.cs" />
     <Compile Include="RunData.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="ImageAnalyser.cs" />

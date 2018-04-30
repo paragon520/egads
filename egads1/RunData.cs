@@ -14,14 +14,19 @@ namespace egads1
         // merge the analysis pairs into bigger sets with volume, and stuff
         // will likely need a new data holder class for it.
 
-        List<ImageAnalysis> store;
+        //List<ImageAnalysis> store;
+        List<GrainAnalysis> store;
+        //List<Tuple<ImageAnalysis, ImageAnalysis>> newStore;
+        //Tuple<ImageAnalysis, ImageAnalysis> currentSet;
         string outputFile;
         decimal pxPerCm;
 
 
         public RunData()
         {
-            store = new List<ImageAnalysis>();
+            //store = new List<ImageAnalysis>();
+            store = new List<GrainAnalysis>();
+
             outputFile = "data.csv";
             pxPerCm = 296.3M;
         }
@@ -31,17 +36,20 @@ namespace egads1
             outputFile = file;
         }
 
-        public void add(ImageAnalysis ia)
+        public void add(GrainAnalysis ia)
         {
             store.Add(ia);
         }
 
         public void close()
         {
-            string data = "Width(mm),Length(mm),Area(mm2),Ratio\n";
-            foreach (ImageAnalysis ia in store)
+            //string data = "Width(mm),Length(mm),Area(mm2),Ratio\n"
+            string data = "Length(mm),Width(mm),Depth(mm),Area(mm^2),Volume(mm^3)\n";
+            foreach (GrainAnalysis ga in store)
             {
-                data += convertPxToMm(ia.Width) + "," + convertPxToMm(ia.Length) + "," + convertSqPxToSqMm(ia.Area) + "," + ia.Ratio + "\n";
+                //data += convertPxToMm(ia.Width) + "," + convertPxToMm(ia.Length) + "," + convertSqPxToSqMm(ia.Area) + "," + ia.Ratio + "\n";
+                data += convertPxToMm(ga.Length) + "," + convertPxToMm(ga.Width) + "," + convertPxToMm(ga.Depth) + "," 
+                    + convertSquarePxToSquareMm(ga.CrossSectionArea) + "," + convertCubicPxToCubicMm(ga.Volume) + "\n";
             }
 
             try
@@ -60,11 +68,18 @@ namespace egads1
 
         }
 
-        private decimal convertSqPxToSqMm(double pixels)
+        private decimal convertSquarePxToSquareMm(double pixels)
         {
             decimal sqPxPerSqCm = pxPerCm * pxPerCm;
 
             return Math.Round((decimal)pixels / sqPxPerSqCm * 10000, 3);
+        }
+
+        private decimal convertCubicPxToCubicMm(double pixels)
+        {
+            decimal cbPxPerCbCm = pxPerCm * pxPerCm * pxPerCm;
+
+            return Math.Round((decimal)pixels / cbPxPerCbCm * 1000000, 3);
         }
 
     }

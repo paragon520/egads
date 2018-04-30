@@ -22,6 +22,13 @@ namespace egads1
         private int maskLumUpper = 95;
         private int maskLumLower = 255;
 
+        private int maskLightLower = 85;
+        private int maskLightUpper = 255;
+        private int maskALower = 0;
+        private int maskAUpper = 255;
+        private int maskBLower = 120;
+        private int maskBUpper = 255;
+
 
         public ImageAnalyser()
         {
@@ -30,6 +37,11 @@ namespace egads1
 
         public ImageAnalysis analyse(string fileName)
         {
+            return analyse(fileName, maskLightLower, maskLightUpper, maskALower, maskAUpper, maskBLower, maskBUpper);
+        }
+        
+        public ImageAnalysis analyse(string fileName, int lLow, int lHigh, int aLow, int aHigh, int bLow, int bHigh)
+        {
             ImageAnalysis analysis = new ImageAnalysis();
 
             Mat tempMat = new Mat(fileName);
@@ -37,7 +49,10 @@ namespace egads1
             // pixel mask, erode x2, dilate x2
             //CvInvoke.GaussianBlur(mat, mat, new Size(5, 5), 1.5, 1.5);
             //CvInvoke.GaussianBlur(mat, mat, new Size(5, 5), 1.5, 1.5);
-            GetColorPixelMask(tempMat, tempMat, maskHueUpper, maskHueLower, maskSatUpper, maskSatLower, maskLumUpper, maskLumLower);
+            //GetColorPixelMask(tempMat, tempMat, maskHueUpper, maskHueLower, maskSatUpper, maskSatLower, maskLumUpper, maskLumLower);
+            GetLabColorPixelMask(tempMat, tempMat, lLow, lHigh, aLow, aHigh, bLow, bHigh);
+            //tempMat.Save(fileName + "temp.jpg");
+
             CvInvoke.Erode(tempMat, tempMat, null, new Point(-1, -1), 2, BorderType.Constant, CvInvoke.MorphologyDefaultBorderValue);
             Mat temp = new Mat();
             CvInvoke.Dilate(tempMat, temp, null, new Point(-1, -1), 2, BorderType.Constant, CvInvoke.MorphologyDefaultBorderValue);
@@ -66,7 +81,7 @@ namespace egads1
                         largest_contour_index = i;                //Store the index of largest contour
                     }
 
-                    CvInvoke.DrawContours(result, contours, largest_contour_index, new MCvScalar(255, 0, 0));
+                    //CvInvoke.DrawContours(result, contours, largest_contour_index, new MCvScalar(255, 0, 0));
                 }
 
 
@@ -118,7 +133,7 @@ namespace egads1
                 analysis.Result = tempImg.ToBitmap();
 
             }
-            
+
 
             return analysis;
         }
@@ -160,5 +175,42 @@ namespace egads1
 
             }
         }
+
+
+        private static void GetLabColorPixelMask(IInputArray image, IInputOutputArray mask, int lightLower, int lightUpper, int aLower, int aUpper, int bLower, int bUpper)
+        {
+            bool useUMat;
+            using (InputOutputArray ia = mask.GetInputOutputArray())
+                useUMat = ia.IsUMat;
+
+            using (IImage lab = useUMat ? (IImage)new UMat() : (IImage)new Mat())
+            using (IImage l = useUMat ? (IImage)new UMat() : (IImage)new Mat())
+            using (IImage a = useUMat ? (IImage)new UMat() : (IImage)new Mat())
+            using (IImage b = useUMat ? (IImage)new UMat() : (IImage)new Mat())
+            {
+                CvInvoke.CvtColor(image, lab, ColorConversion.Bgr2Lab);
+                CvInvoke.ExtractChannel(lab, mask, 0);
+                CvInvoke.ExtractChannel(lab, a, 1);
+                CvInvoke.ExtractChannel(lab, b, 2);
+
+                //threshold on lightness
+                //CvInvoke.Threshold(lab, l, lightLower, lightUpper, ThresholdType.Binary);
+                //CvInvoke.BitwiseAnd(mask, s, mask, null);
+
+                using (ScalarArray lower = new ScalarArray(lightLower))
+                using (ScalarArray upper = new ScalarArray(lightUpper))
+                    CvInvoke.InRange(mask, lower, upper, mask);
+
+                //threshold on A colorspace and merge L and A into Mask
+                CvInvoke.Threshold(a, a, aLower, aUpper, ThresholdType.Binary);
+                CvInvoke.BitwiseAnd(mask, a, mask, null);
+
+                //threshold on B colorspace and merge B into previous Mask
+                CvInvoke.Threshold(b, b, bLower, bUpper, ThresholdType.Binary);
+                CvInvoke.BitwiseAnd(mask, b, mask, null);
+
+            }
+        }
+
     }
 }
