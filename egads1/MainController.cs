@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace egads1
 {
     public enum State { Idle, DataRecord, SampleARecord, SampleBRecord, Sort}
     public enum Command {MainCamConnect, MainCamSettings, SideCamConnect, SideCamSettings, ToggleCamTrigger,
-        RecordStart, RecordStop, RecordAStart, RecordAStop, RecordBStart, RecordBStop, MakeCalibration }
+        RecordStart, RecordStop, RecordAStart, RecordAStop, RecordBStart, RecordBStop, MakeCalibration, SortMode, DataMode }
 
     class MainController
     {
@@ -41,7 +42,7 @@ namespace egads1
             sideCamera = new CameraController(sideIC, "cam2Config.xml");
         }
 
-        public void command(Command c, string filename = "data.csv")
+        public void command(Command c, string filename = "data.csv", bool rejectB = true)
         {
             switch (c)
             {
@@ -113,7 +114,17 @@ namespace egads1
                     }
                 case Command.MakeCalibration:
                     {
-                        calibration(out threshold);
+                        calibration(filename, rejectB, out threshold);
+                        break;
+                    }
+                case Command.SortMode:
+                    {
+                        currentState = State.Sort;
+                        break;
+                    }
+                case Command.DataMode:
+                    {
+                        currentState = State.Idle;
                         break;
                     }
             }
@@ -160,6 +171,11 @@ namespace egads1
             ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename);
             mainView.postImageSide(tempAnalysis2.Result);
 
+            string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
+            output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
+
+            mainView.displayData(output);
+
             if (currentGrain != null)
             {
                 currentGrain.setSide(tempAnalysis2);
@@ -183,19 +199,16 @@ namespace egads1
                         break;
                 }
 
+                output = "Grain| L=" + (int)currentGrain.Length + ", W=" + (int)currentGrain.Width + ", D=" + (int)currentGrain.Depth + ", V=" + (int)currentGrain.Volume;
+                mainView.displayData(output);
+
                 currentGrain = null;
             }
-
-
-            string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
-            output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
-
-            mainView.displayData(output);
-                
+            
         }
 
 
-        private bool calibration(out double m_threshold)
+        private bool calibration(string filename, bool rejectB, out double m_threshold)
         {
             if (runSampleA.Length > 1 && runSampleB.Length > 1)
             {
@@ -259,6 +272,12 @@ namespace egads1
                 mainView.displayData("Threshold: " + m_threshold);
 
                 //if stddev overlap, this will have low accuracy on sorting.
+
+                string calText =
+                    "Variable=Volume\n" +
+                    "Value="+m_threshold;
+
+                File.AppendAllText(filename, calText);
 
                 return (m_threshold > 0);
             }

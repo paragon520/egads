@@ -16,7 +16,9 @@ namespace egads1
     public partial class MainView : Form
     {
         public const string TEMPIMAGEMAIN = "tmpMain.bmp";
+        public const string TEMPIMAGEMAIN2 = "tmpMain2.bmp";
         public const string TEMPIMAGESIDE = "tmpSide.bmp";
+        public const string TEMPIMAGESIDE2 = "tmpSide2.bmp";
 
 
         private MainController controller;
@@ -67,8 +69,16 @@ namespace egads1
                 icMain.Invoke(new icMain_ImageAvailable_delegate(icMain_ImageAvailable), sender, e);
             else
             {
-                icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN);
-                controller.imageAvailableMain(TEMPIMAGEMAIN);
+                try
+                {
+                    icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN);
+                    controller.imageAvailableMain(TEMPIMAGEMAIN);
+                }
+                catch (Exception ex)
+                {
+                    icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN2);
+                    controller.imageAvailableMain(TEMPIMAGEMAIN2);
+                }
             }
         }
         private delegate void icMain_ImageAvailable_delegate(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e);
@@ -79,8 +89,16 @@ namespace egads1
                 icSide.Invoke(new icSide_ImageAvailable_delegate(icSide_ImageAvailable), sender, e);
             else
             {
-                icSide.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGESIDE);
-                controller.imageAvailableSide(TEMPIMAGESIDE);
+                try
+                {
+                    icSide.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGESIDE);
+                    controller.imageAvailableSide(TEMPIMAGESIDE);
+                }
+                catch (Exception ex)
+                {
+                    icSide.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGESIDE2);
+                    controller.imageAvailableSide(TEMPIMAGESIDE2);
+                }
             }
         }
         private delegate void icSide_ImageAvailable_delegate(object sender, TIS.Imaging.ICImagingControl.ImageAvailableEventArgs e);
@@ -129,25 +147,30 @@ namespace egads1
 
         private void btCalibrationAStart_Click(object sender, EventArgs e)
         {
-
+            controller.command(Command.RecordAStart);
         }
 
         private void btCalibrationAStop_Click(object sender, EventArgs e)
         {
-
+            controller.command(Command.RecordAStop);
         }
 
         private void btCalibrationBStart_Click(object sender, EventArgs e)
         {
-
+            controller.command(Command.RecordBStart);
         }
 
         private void btCalibrationBStop_Click(object sender, EventArgs e)
         {
-
+            controller.command(Command.RecordBStop);
         }
 
         private void btCalibrationSave_Click(object sender, EventArgs e)
+        {
+            controller.command(Command.MakeCalibration, tbCalibrationSaveFile.Text);
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
 
         }
