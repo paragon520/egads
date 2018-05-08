@@ -28,7 +28,7 @@ namespace egads1
             store = new List<GrainAnalysis>();
 
             outputFile = "data.csv";
-            pxPerCm = 296.3M;
+            pxPerCm = 239M;
         }
 
         public void setOutputFile(string file)
@@ -48,8 +48,8 @@ namespace egads1
             foreach (GrainAnalysis ga in store)
             {
                 //data += convertPxToMm(ia.Width) + "," + convertPxToMm(ia.Length) + "," + convertSqPxToSqMm(ia.Area) + "," + ia.Ratio + "\n";
-                data += convertPxToMm(ga.Length) + "," + convertPxToMm(ga.Width) + "," + convertPxToMm(ga.Depth) + "," 
-                    + convertSquarePxToSquareMm(ga.CrossSectionArea) + "," + convertCubicPxToCubicMm(ga.Volume) + "\n";
+                data += ga.Length + "," + ga.Width + "," + ga.Depth + "," 
+                    + ga.CrossSectionArea + "," + ga.Volume + "\n";
             }
 
             try
@@ -64,7 +64,7 @@ namespace egads1
 
         private decimal convertPxToMm(float pixels)
         {
-            return Math.Round((decimal)pixels / pxPerCm * 100, 3);
+            return Math.Round((decimal)pixels / pxPerCm * 10, 3);
 
         }
 
@@ -72,14 +72,14 @@ namespace egads1
         {
             decimal sqPxPerSqCm = pxPerCm * pxPerCm;
 
-            return Math.Round((decimal)pixels / sqPxPerSqCm * 10000, 3);
+            return Math.Round((decimal)pixels / sqPxPerSqCm * 100, 3);
         }
 
         private decimal convertCubicPxToCubicMm(double pixels)
         {
             decimal cbPxPerCbCm = pxPerCm * pxPerCm * pxPerCm;
 
-            return Math.Round((decimal)pixels / cbPxPerCbCm * 1000000, 3);
+            return Math.Round((decimal)pixels / cbPxPerCbCm * 1000, 3);
         }
 
         public int Length { get => store.Count; }

@@ -11,21 +11,23 @@ namespace egads1
     {
         private ImageAnalysis mainImage;
         private ImageAnalysis sideImage;
+        double pxPerCm;
 
         private double mCrossSectionArea;
-        private float mLength;
-        private float mWidth;
-        private float mDepth;
+        private double mLength;
+        private double mWidth;
+        private double mDepth;
         private double mVolume;
 
         public double CrossSectionArea { get => mCrossSectionArea; set => mCrossSectionArea = value; }
-        public float Length { get => mLength; set => mLength = value; }
-        public float Width { get => mWidth; set => mWidth = value; }
-        public float Depth { get => mDepth; set => mDepth = value; }
+        public double Length { get => mLength; set => mLength = value; }
+        public double Width { get => mWidth; set => mWidth = value; }
+        public double Depth { get => mDepth; set => mDepth = value; }
         public double Volume { get => mVolume; set => mVolume = value; }
 
         public GrainAnalysis()
         {
+            pxPerCm = 239;
 
         }
 
@@ -51,28 +53,48 @@ namespace egads1
 
         public void analyse()
         {
-            mLength = (mainImage.Length >= sideImage.Length) ? mainImage.Length : sideImage.Length;
+            mLength = convertPxToMm((mainImage.Length >= sideImage.Length) ? mainImage.Length : sideImage.Length);
 
             if (mainImage.Width >= sideImage.Width)
             {
-                mWidth = mainImage.Width;
-                mDepth = sideImage.Width;
+                mWidth = convertPxToMm(mainImage.Width);
+                mDepth = convertPxToMm(sideImage.Width);
             }
             else
             {
-                mWidth = sideImage.Width;
-                mDepth = mainImage.Width;
+                mWidth = convertPxToMm(sideImage.Width);
+                mDepth = convertPxToMm(mainImage.Width);
             }
 
-            mCrossSectionArea = (mainImage.Area >= sideImage.Area) ? mainImage.Area : sideImage.Area;
+            mCrossSectionArea = convertSquarePxToSquareMm((mainImage.Area >= sideImage.Area) ? mainImage.Area : sideImage.Area);
 
             // TODO: make this better. grain kernels arent rectangular solids.
             //mVolume = mLength * mWidth * mDepth;
 
             //Volume of an ellipsoid = 4/3 * pi * radii a*b*c
-            mVolume = (4 / 3) * Math.PI * (mLength / 2) * (mWidth / 2) * (mDepth / 2);
+            mVolume = (4D / 3D) * Math.PI * (mLength / 2D) * (mWidth / 2D) * (mDepth / 2D);
         }
 
+
+        private double convertPxToMm(float pixels)
+        {
+            return Math.Round((double)pixels / pxPerCm * 10, 3);
+
+        }
+
+        private double convertSquarePxToSquareMm(double pixels)
+        {
+            double sqPxPerSqCm = pxPerCm * pxPerCm;
+
+            return Math.Round((double)pixels / sqPxPerSqCm * 100, 3);
+        }
+
+        private double convertCubicPxToCubicMm(double pixels)
+        {
+            double cbPxPerCbCm = pxPerCm * pxPerCm * pxPerCm;
+
+            return Math.Round((double)pixels / cbPxPerCbCm * 1000, 3);
+        }
 
     }
 }

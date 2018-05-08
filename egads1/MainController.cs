@@ -77,6 +77,7 @@ namespace egads1
                 case Command.RecordStart:
                     {
                         currentState = State.DataRecord;
+                        currentRun = new RunData();
                         break;
                     }
                 case Command.RecordStop:
@@ -199,7 +200,7 @@ namespace egads1
                         break;
                 }
 
-                output = "Grain| L=" + (int)currentGrain.Length + ", W=" + (int)currentGrain.Width + ", D=" + (int)currentGrain.Depth + ", V=" + (int)currentGrain.Volume;
+                output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
                 mainView.displayData(output);
 
                 currentGrain = null;
