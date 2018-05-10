@@ -54,7 +54,7 @@ namespace egads1
 
             try
             {
-                File.AppendAllText(outputFile, data);
+                File.WriteAllText(outputFile, data);
             }
             catch (Exception ex)
             {

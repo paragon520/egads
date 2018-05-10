@@ -78,6 +78,7 @@ namespace egads1
                     {
                         currentState = State.DataRecord;
                         currentRun = new RunData();
+                        mainView.displayData("Data recording started.");
                         break;
                     }
                 case Command.RecordStop:
@@ -85,12 +86,14 @@ namespace egads1
                         currentState = State.Idle;
                         currentRun.setOutputFile(filename);
                         currentRun.close();
+                        mainView.displayData("Data recording stopped.");
                         break;
                     }
                 case Command.RecordAStart:
                     {
                         currentState = State.SampleARecord;
                         runSampleA = new RunData();
+                        mainView.displayData("Sample A recording started.");
                         break;
                     }
                 case Command.RecordAStop:
@@ -98,12 +101,14 @@ namespace egads1
                         currentState = State.Idle;
                         runSampleA.setOutputFile("sampleA.csv");
                         runSampleA.close();
+                        mainView.displayData("Sample A recording stopped and saved.");
                         break;
                     }
                 case Command.RecordBStart:
                     {
                         currentState = State.SampleBRecord;
                         runSampleB = new RunData();
+                        mainView.displayData("Sample B recording started.");
                         break;
                     }
                 case Command.RecordBStop:
@@ -111,6 +116,7 @@ namespace egads1
                         currentState = State.Idle;
                         runSampleB.setOutputFile("sampleB.csv");
                         runSampleB.close();
+                        mainView.displayData("Sample B recording stopped and saved.");
                         break;
                     }
                 case Command.MakeCalibration:
