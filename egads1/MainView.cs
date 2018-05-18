@@ -167,12 +167,17 @@ namespace egads1
 
         private void btCalibrationSave_Click(object sender, EventArgs e)
         {
-            controller.command(Command.MakeCalibration, tbCalibrationSaveFile.Text);
+            controller.command(Command.MakeCalibration, tbCalibrationSaveFile.Text, rbRejectB.Checked);
         }
 
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        private void rbSortMode_CheckedChanged(object sender, EventArgs e)
         {
+            controller.command(Command.SortMode);
+        }
 
+        private void rbDataMode_CheckedChanged(object sender, EventArgs e)
+        {
+            controller.command(Command.DataMode);
         }
     }
 }

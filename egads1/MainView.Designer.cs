@@ -60,8 +60,8 @@
             this.btCamSettingsTop = new System.Windows.Forms.Button();
             this.tpRunPage = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.rbSortMode = new System.Windows.Forms.RadioButton();
+            this.rbDataMode = new System.Windows.Forms.RadioButton();
             this.gbRecord = new System.Windows.Forms.GroupBox();
             this.lbRecordFilename = new System.Windows.Forms.Label();
             this.btRecordStop = new System.Windows.Forms.Button();
@@ -402,8 +402,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButton3);
-            this.groupBox1.Controls.Add(this.radioButton2);
+            this.groupBox1.Controls.Add(this.rbSortMode);
+            this.groupBox1.Controls.Add(this.rbDataMode);
             this.groupBox1.Location = new System.Drawing.Point(155, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(143, 90);
@@ -411,28 +411,29 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Mode";
             // 
-            // radioButton3
+            // rbSortMode
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(6, 39);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(44, 17);
-            this.radioButton3.TabIndex = 2;
-            this.radioButton3.Text = "Sort";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
+            this.rbSortMode.AutoSize = true;
+            this.rbSortMode.Location = new System.Drawing.Point(6, 39);
+            this.rbSortMode.Name = "rbSortMode";
+            this.rbSortMode.Size = new System.Drawing.Size(44, 17);
+            this.rbSortMode.TabIndex = 2;
+            this.rbSortMode.Text = "Sort";
+            this.rbSortMode.UseVisualStyleBackColor = true;
+            this.rbSortMode.CheckedChanged += new System.EventHandler(this.rbSortMode_CheckedChanged);
             // 
-            // radioButton2
+            // rbDataMode
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Checked = true;
-            this.radioButton2.Location = new System.Drawing.Point(6, 16);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(48, 17);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Data";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.rbDataMode.AutoSize = true;
+            this.rbDataMode.Checked = true;
+            this.rbDataMode.Location = new System.Drawing.Point(6, 16);
+            this.rbDataMode.Name = "rbDataMode";
+            this.rbDataMode.Size = new System.Drawing.Size(48, 17);
+            this.rbDataMode.TabIndex = 1;
+            this.rbDataMode.TabStop = true;
+            this.rbDataMode.Text = "Data";
+            this.rbDataMode.UseVisualStyleBackColor = true;
+            this.rbDataMode.CheckedChanged += new System.EventHandler(this.rbDataMode_CheckedChanged);
             // 
             // gbRecord
             // 
@@ -556,8 +557,8 @@
         private System.Windows.Forms.Button btCalibrationAStop;
         private System.Windows.Forms.Button btCalibrationAStart;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton rbSortMode;
+        private System.Windows.Forms.RadioButton rbDataMode;
         private System.Windows.Forms.RadioButton rbRejectA;
         private System.Windows.Forms.RadioButton rbRejectB;
     }

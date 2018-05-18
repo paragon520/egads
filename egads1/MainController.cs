@@ -24,7 +24,9 @@ namespace egads1
         private RunData runSampleA;
         private RunData runSampleB;
         private State currentState;
+        private bool sort;
         double threshold;
+        bool rejectAboveThreshold;
 
 
         public MainController(MainView m_mainView)
@@ -34,6 +36,7 @@ namespace egads1
             sideAnalyser = new ImageAnalyser();
             currentRun = new RunData();
             currentState = State.Idle;
+            sort = false;
         }
 
         public void setCameraControllers(TIS.Imaging.ICImagingControl mainIC, TIS.Imaging.ICImagingControl sideIC)
@@ -121,17 +124,19 @@ namespace egads1
                     }
                 case Command.MakeCalibration:
                     {
-                        calibration(filename, rejectB, out threshold);
+                        calibration(filename, rejectB, out threshold, out rejectAboveThreshold);
                         break;
                     }
                 case Command.SortMode:
                     {
-                        currentState = State.Sort;
+                        //currentState = State.Sort;
+                        sort = true;
                         break;
                     }
                 case Command.DataMode:
                     {
                         currentState = State.Idle;
+                        sort = false;
                         break;
                     }
             }
@@ -206,6 +211,28 @@ namespace egads1
                         break;
                 }
 
+                if (sort)
+                {
+                    if (rejectAboveThreshold)
+                    {
+                        if (currentGrain.Volume > threshold)
+                        {
+                            //reject
+                            mainView.displayData("Reject!");
+                        }
+                    }
+                    else
+                    {
+                        if (currentGrain.Volume <= threshold)
+                        {
+                            //reject
+                            mainView.displayData("Reject!");
+
+                        }
+                    }
+                         
+                }
+
                 output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
                 mainView.displayData(output);
 
@@ -215,7 +242,7 @@ namespace egads1
         }
 
 
-        private bool calibration(string filename, bool rejectB, out double m_threshold)
+        private bool calibration(string filename, bool rejectB, out double m_threshold, out bool m_rejectAbove)
         {
             if (runSampleA.Length > 1 && runSampleB.Length > 1)
             {
@@ -261,14 +288,17 @@ namespace egads1
 
                 //calculate volume threshold to (halfway between averages)
                 m_threshold = 0;
+                m_rejectAbove = false;
 
                 if (meanVolumeA < meanVolumeB)
                 {
                     m_threshold = ((meanVolumeA + stddevSetA) + (meanVolumeB - stddevSetB)) / 2;
+                    m_rejectAbove = (rejectB);
                 }
                 else if (meanVolumeA > meanVolumeB)
                 {
                     m_threshold = ((meanVolumeA - stddevSetA) + (meanVolumeB + stddevSetB)) / 2;
+                    m_rejectAbove = !rejectB;
                 }
                 else
                 {
@@ -277,12 +307,15 @@ namespace egads1
                 }
 
                 mainView.displayData("Threshold: " + m_threshold);
+                mainView.displayData((m_rejectAbove ? "Reject above threshold" : "Reject below threshold"));
+
 
                 //if stddev overlap, this will have low accuracy on sorting.
 
                 string calText =
                     "Variable=Volume\n" +
-                    "Value="+m_threshold;
+                    "Value="+m_threshold +"\n"+
+                    "RejectAbove="+m_rejectAbove.ToString();
 
                 File.AppendAllText(filename, calText);
 
@@ -291,6 +324,7 @@ namespace egads1
             else
             {
                 m_threshold = 0;
+                m_rejectAbove = false;
                 return false;
             }
         }

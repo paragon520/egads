@@ -1,2 +1,6 @@
 Variable=Volume
-Value=299244.308147752
+Value=299244.308147752Variable=Volume
+Value=32.2112777614545
+RejectAbove=FalseVariable=Volume
+Value=23.222942619457
+RejectAbove=False

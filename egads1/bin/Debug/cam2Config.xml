@@ -7,7 +7,7 @@
         <vcdpropertyitems>
             <item guid="{284C0E06-010B-45BF-8291-09D90A459B28}" name="Brightness">
                 <element guid="{B57D3000-0AC6-4819-A609-272A33140ACA}" name="Value">
-                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="240" />
+                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E03}" value="238" />
                 </element>
             </item>
             <item guid="{284C0E08-010B-45BF-8291-09D90A459B28}" name="Hue">
@@ -71,7 +71,7 @@
                     <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" />
                 </element>
                 <element guid="{C337CFB8-EA08-4E69-A655-586937B6AFEC}" name="Delay">
-                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="1000." />
+                    <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E08}" value="4000." />
                 </element>
                 <element guid="{BE0B5BDC-0B1D-4F75-B512-4F17A047671E}" name="IMX Low-Latency Mode">
                     <itf guid="{99B44940-BFE1-4083-ADA1-BE703F4B8E04}" value="0" />
