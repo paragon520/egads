@@ -44,12 +44,12 @@ namespace egads1
         public void close()
         {
             //string data = "Width(mm),Length(mm),Area(mm2),Ratio\n"
-            string data = "Length(mm),Width(mm),Depth(mm),Area(mm^2),Volume(mm^3)\n";
+            string data = "Length(mm),Width(mm),Depth(mm),Area(mm^2),Volume(mm^3),Main Angle, Side Angle\n";
             foreach (GrainAnalysis ga in store)
             {
                 //data += convertPxToMm(ia.Width) + "," + convertPxToMm(ia.Length) + "," + convertSqPxToSqMm(ia.Area) + "," + ia.Ratio + "\n";
                 data += ga.Length + "," + ga.Width + "," + ga.Depth + "," 
-                    + ga.CrossSectionArea + "," + ga.Volume + "\n";
+                    + ga.CrossSectionArea + "," + ga.Volume + "," + ga.MainAngle + "," + ga.SideAngle + "\n";
             }
 
             try

@@ -18,12 +18,16 @@ namespace egads1
         private double mWidth;
         private double mDepth;
         private double mVolume;
+        private double mMainAngle;
+        private double mSideAngle;
 
-        public double CrossSectionArea { get => mCrossSectionArea; set => mCrossSectionArea = value; }
-        public double Length { get => mLength; set => mLength = value; }
-        public double Width { get => mWidth; set => mWidth = value; }
-        public double Depth { get => mDepth; set => mDepth = value; }
-        public double Volume { get => mVolume; set => mVolume = value; }
+        public double CrossSectionArea { get => mCrossSectionArea;  }
+        public double Length { get => mLength;  }
+        public double Width { get => mWidth; }
+        public double Depth { get => mDepth;  }
+        public double Volume { get => mVolume; }
+        public double MainAngle { get => mMainAngle; }
+        public double SideAngle { get => mSideAngle; }
 
         public GrainAnalysis()
         {
@@ -73,6 +77,9 @@ namespace egads1
 
             //Volume of an ellipsoid = 4/3 * pi * radii a*b*c
             mVolume = (4D / 3D) * Math.PI * (mLength / 2D) * (mWidth / 2D) * (mDepth / 2D);
+
+            mMainAngle = mainImage.BoundingBox.Angle;
+            mSideAngle = sideImage.BoundingBox.Angle;
         }
 
 

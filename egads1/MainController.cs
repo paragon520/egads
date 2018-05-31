@@ -211,6 +211,10 @@ namespace egads1
                         break;
                 }
 
+
+                output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+                mainView.displayData(output);
+
                 if (sort)
                 {
                     if (rejectAboveThreshold)
@@ -219,22 +223,21 @@ namespace egads1
                         {
                             //reject
                             mainView.displayData("Reject!");
+                            System.Media.SystemSounds.Asterisk.Play();
                         }
                     }
                     else
                     {
-                        if (currentGrain.Volume <= threshold)
+                        if (currentGrain.Volume < threshold)
                         {
                             //reject
                             mainView.displayData("Reject!");
+                            System.Media.SystemSounds.Asterisk.Play();
 
                         }
                     }
-                         
-                }
 
-                output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
-                mainView.displayData(output);
+                }
 
                 currentGrain = null;
             }
