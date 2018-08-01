@@ -63,6 +63,8 @@
             this.rbSortMode = new System.Windows.Forms.RadioButton();
             this.rbDataMode = new System.Windows.Forms.RadioButton();
             this.gbRecord = new System.Windows.Forms.GroupBox();
+            this.Count = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.lbRecordFilename = new System.Windows.Forms.Label();
             this.btRecordStop = new System.Windows.Forms.Button();
             this.btRecordStart = new System.Windows.Forms.Button();
@@ -437,16 +439,34 @@
             // 
             // gbRecord
             // 
+            this.gbRecord.Controls.Add(this.Count);
+            this.gbRecord.Controls.Add(this.textBox1);
             this.gbRecord.Controls.Add(this.lbRecordFilename);
             this.gbRecord.Controls.Add(this.btRecordStop);
             this.gbRecord.Controls.Add(this.btRecordStart);
             this.gbRecord.Controls.Add(this.tbRecordFilename);
             this.gbRecord.Location = new System.Drawing.Point(6, 6);
             this.gbRecord.Name = "gbRecord";
-            this.gbRecord.Size = new System.Drawing.Size(143, 91);
+            this.gbRecord.Size = new System.Drawing.Size(143, 126);
             this.gbRecord.TabIndex = 6;
             this.gbRecord.TabStop = false;
             this.gbRecord.Text = "Record to Data File";
+            // 
+            // Count
+            // 
+            this.Count.AutoSize = true;
+            this.Count.Location = new System.Drawing.Point(26, 94);
+            this.Count.Name = "Count";
+            this.Count.Size = new System.Drawing.Size(35, 13);
+            this.Count.TabIndex = 8;
+            this.Count.Text = "Count";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(80, 91);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(57, 20);
+            this.textBox1.TabIndex = 4;
             // 
             // lbRecordFilename
             // 
@@ -561,6 +581,8 @@
         private System.Windows.Forms.RadioButton rbDataMode;
         private System.Windows.Forms.RadioButton rbRejectA;
         private System.Windows.Forms.RadioButton rbRejectB;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label Count;
     }
 }
 

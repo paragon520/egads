@@ -206,6 +206,8 @@ namespace egads1
                     case State.DataRecord:
                         //currentRun.add(tempAnalysis);
                         currentRun.add(currentGrain);
+                        int length = currentRun.totalLength();
+                        mainView.displayLength(length);
                         break;
                     case State.Idle:
                         break;

@@ -29,6 +29,7 @@ namespace egads1
 
             outputFile = "data.csv";
             pxPerCm = 239M;
+            
         }
 
         public void setOutputFile(string file)
@@ -39,8 +40,13 @@ namespace egads1
         public void add(GrainAnalysis ia)
         {
             store.Add(ia);
+            
         }
-
+        public int totalLength()
+        {
+            int length = store.Count;
+            return length;
+        }
         public void close()
         {
             //string data = "Width(mm),Length(mm),Area(mm2),Ratio\n"

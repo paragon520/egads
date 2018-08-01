@@ -179,5 +179,12 @@ namespace egads1
         {
             controller.command(Command.DataMode);
         }
+
+        
+        public void displayLength(int length)
+        {
+            int temp = length;
+            textBox1.Text = temp.ToString();
+        }
     }
 }
