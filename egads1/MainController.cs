@@ -28,7 +28,6 @@ namespace egads1
         double threshold;
         bool rejectAboveThreshold;
 
-
         public MainController(MainView m_mainView)
         {
             mainView = m_mainView;
