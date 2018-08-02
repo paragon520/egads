@@ -179,5 +179,10 @@ namespace egads1
         {
             controller.command(Command.DataMode);
         }
+
+        private void btnManualCapture_Click(object sender, EventArgs e)
+        {
+            controller.command(Command.ManualCapture, tbManualOutputFile.Text, cbxManualRecordThis.Checked);
+        }
     }
 }

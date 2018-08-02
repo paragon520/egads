@@ -145,5 +145,11 @@ namespace egads1
             }
         }
 
+        public void manualCapture(string filename)
+        {
+            camera.MemorySnapImage();
+            camera.ImageActiveBuffer.SaveAsBitmap(filename);
+        }
+
     }
 }

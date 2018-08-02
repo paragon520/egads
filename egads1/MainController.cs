@@ -10,7 +10,7 @@ namespace egads1
 {
     public enum State { Idle, DataRecord, SampleARecord, SampleBRecord, Sort}
     public enum Command {MainCamConnect, MainCamSettings, SideCamConnect, SideCamSettings, ToggleCamTrigger,
-        RecordStart, RecordStop, RecordAStart, RecordAStop, RecordBStart, RecordBStop, MakeCalibration, SortMode, DataMode }
+        RecordStart, RecordStop, RecordAStart, RecordAStop, RecordBStart, RecordBStop, MakeCalibration, SortMode, DataMode, ManualCapture }
 
     class MainController
     {
@@ -44,7 +44,7 @@ namespace egads1
             sideCamera = new CameraController(sideIC, "cam2Config.xml");
         }
 
-        public void command(Command c, string filename = "data.csv", bool rejectB = true)
+        public void command(Command c, string filename = "data.csv", bool isTrue = true)
         {
             switch (c)
             {
@@ -123,7 +123,7 @@ namespace egads1
                     }
                 case Command.MakeCalibration:
                     {
-                        calibration(filename, rejectB, out threshold, out rejectAboveThreshold);
+                        calibration(filename, isTrue, out threshold, out rejectAboveThreshold);
                         break;
                     }
                 case Command.SortMode:
@@ -136,6 +136,11 @@ namespace egads1
                     {
                         currentState = State.Idle;
                         sort = false;
+                        break;
+                    }
+                case Command.ManualCapture:
+                    {
+                        manualCapture(filename, isTrue);
                         break;
                     }
             }
@@ -243,6 +248,61 @@ namespace egads1
             
         }
 
+        private void manualCapture(string outputFile, bool recordThis)
+        {
+            string mainFile = "temp-Main.bmp";
+            string sideFile = "temp-Side.bmp";
+
+            mainCamera.manualCapture(mainFile);
+            sideCamera.manualCapture(sideFile);
+
+            ImageAnalysis mainAnalysis = mainAnalyser.analyse(mainFile); //Move to thread task?
+            mainView.postImageMain(mainAnalysis.Result);
+            string output = "Main| C=(" + (int)mainAnalysis.Center.X + "px," + (int)mainAnalysis.Center.Y + "px), "
+            + "A=" + (int)mainAnalysis.Area + ", W=" + (int)mainAnalysis.Width + ", L=" + (int)mainAnalysis.Length + ", R=1:" + mainAnalysis.Ratio;
+            mainView.displayData(output);
+            
+            ImageAnalysis sideAnalysis = sideAnalyser.analyse(sideFile, 105, 255, 0, 255, 120, 255);
+            mainView.postImageSide(sideAnalysis.Result);
+            output = "Side| C=(" + (int)sideAnalysis.Center.X + "px," + (int)sideAnalysis.Center.Y + "px), "
+            + "A=" + (int)sideAnalysis.Area + ", W=" + (int)sideAnalysis.Width + ", L=" + (int)sideAnalysis.Length + ", R=1:" + sideAnalysis.Ratio;
+            mainView.displayData(output);
+            
+            currentGrain = new GrainAnalysis();
+            currentGrain.setMain(mainAnalysis);
+            currentGrain.setSide(sideAnalysis);
+            currentGrain.analyse();
+
+            output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+            mainView.displayData(output);
+            
+
+            if (recordThis)
+            {
+                string header = "Length(mm),Width(mm),Depth(mm),Area(mm^2),Volume(mm^3)\n";
+                string line = currentGrain.Length + "," + currentGrain.Width + "," + currentGrain.Depth + "," 
+                    + currentGrain.CrossSectionArea + "," + currentGrain.Volume+ "\n";
+
+                //check if file exists, if not create with header
+                if (!File.Exists(outputFile))
+                {
+                    File.AppendAllText(outputFile, header);
+                }
+
+                //append line on file
+                try
+                {
+                    File.AppendAllText(outputFile, line);
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("File error. The file may be open or inaccessable. Try closing the file or changing the file name and trying again. \n\n" + ex.Message);
+                }
+
+            }
+
+            currentGrain = null;
+        }
 
         private bool calibration(string filename, bool rejectB, out double m_threshold, out bool m_rejectAbove)
         {
