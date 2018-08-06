@@ -13,8 +13,8 @@ namespace egads1
         private string configFile;
         private int originalHeight;
         private int originalWidth;
-
-
+        
+        
         public CameraController(ICImagingControl ic, string _configFile)
         {
             camera = ic;
@@ -145,11 +145,27 @@ namespace egads1
             }
         }
 
-        public void manualCapture(string filename)
+        /// <summary>
+        /// Captures the current image in the camera buffer and attempts to save it with the preferred filename. 
+        /// If the file is in use, it will save with an appended number.
+        /// </summary>
+        /// <param name="filename">the preferred file name WITHOUT an extension (ie: "imageName")</param>
+        /// <returns>actual filename saved (ie: "imageName.bmp" or "imageName2.bmp")</returns>
+        public string manualCapture(string filename)
         {
             camera.MemorySnapImage();
-            camera.ImageActiveBuffer.SaveAsBitmap(filename);
+            try
+            {
+                camera.ImageActiveBuffer.SaveAsBitmap(filename+".bmp");
+                return filename + ".bmp";
+            }
+            catch (Exception ex)
+            {
+                camera.ImageActiveBuffer.SaveAsBitmap(filename + "2.bmp");
+                return filename + "2.bmp";
+            }
         }
+        
 
     }
 }

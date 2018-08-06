@@ -250,11 +250,11 @@ namespace egads1
 
         private void manualCapture(string outputFile, bool recordThis)
         {
-            string mainFile = "temp-Main.bmp";
-            string sideFile = "temp-Side.bmp";
+            string mainFile = "temp-Main";
+            string sideFile = "temp-Side";
 
-            mainCamera.manualCapture(mainFile);
-            sideCamera.manualCapture(sideFile);
+            mainFile = mainCamera.manualCapture(mainFile);
+            sideFile = sideCamera.manualCapture(sideFile);
 
             ImageAnalysis mainAnalysis = mainAnalyser.analyse(mainFile); //Move to thread task?
             mainView.postImageMain(mainAnalysis.Result);
@@ -262,7 +262,7 @@ namespace egads1
             + "A=" + (int)mainAnalysis.Area + ", W=" + (int)mainAnalysis.Width + ", L=" + (int)mainAnalysis.Length + ", R=1:" + mainAnalysis.Ratio;
             mainView.displayData(output);
             
-            ImageAnalysis sideAnalysis = sideAnalyser.analyse(sideFile, 105, 255, 0, 255, 120, 255);
+            ImageAnalysis sideAnalysis = sideAnalyser.analyse(sideFile, 100, 255, 0, 255, 120, 255);
             mainView.postImageSide(sideAnalysis.Result);
             output = "Side| C=(" + (int)sideAnalysis.Center.X + "px," + (int)sideAnalysis.Center.Y + "px), "
             + "A=" + (int)sideAnalysis.Area + ", W=" + (int)sideAnalysis.Width + ", L=" + (int)sideAnalysis.Length + ", R=1:" + sideAnalysis.Ratio;
