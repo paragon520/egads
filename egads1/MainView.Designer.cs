@@ -36,6 +36,9 @@
             this.pbSide = new System.Windows.Forms.PictureBox();
             this.tcTabControl = new System.Windows.Forms.TabControl();
             this.tpConfigPage = new System.Windows.Forms.TabPage();
+            this.gbManualCapture = new System.Windows.Forms.GroupBox();
+            this.cbxManualRecordThis = new System.Windows.Forms.CheckBox();
+            this.tbManualOutputFile = new System.Windows.Forms.TextBox();
             this.btnManualCapture = new System.Windows.Forms.Button();
             this.gbCalibrationLoad = new System.Windows.Forms.GroupBox();
             this.lbCalibrationLoaded = new System.Windows.Forms.Label();
@@ -68,22 +71,23 @@
             this.btRecordStop = new System.Windows.Forms.Button();
             this.btRecordStart = new System.Windows.Forms.Button();
             this.tbRecordFilename = new System.Windows.Forms.TextBox();
-            this.gbManualCapture = new System.Windows.Forms.GroupBox();
-            this.tbManualOutputFile = new System.Windows.Forms.TextBox();
-            this.cbxManualRecordThis = new System.Windows.Forms.CheckBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.icMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.icSide)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSide)).BeginInit();
             this.tcTabControl.SuspendLayout();
             this.tpConfigPage.SuspendLayout();
+            this.gbManualCapture.SuspendLayout();
             this.gbCalibrationLoad.SuspendLayout();
             this.gbCalibrationCreate.SuspendLayout();
             this.gbCamSettings.SuspendLayout();
             this.tpRunPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gbRecord.SuspendLayout();
-            this.gbManualCapture.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // tbOutput
@@ -102,11 +106,13 @@
             this.icMain.DeviceListChangedExecutionMode = TIS.Imaging.EventExecutionMode.Invoke;
             this.icMain.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
             this.icMain.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
+            this.icMain.LiveCaptureContinuous = true;
             this.icMain.LiveDisplayPosition = new System.Drawing.Point(0, 0);
             this.icMain.Location = new System.Drawing.Point(12, 99);
             this.icMain.Name = "icMain";
             this.icMain.Size = new System.Drawing.Size(240, 180);
             this.icMain.TabIndex = 1;
+            this.icMain.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icMain_ImageAvailable);
             // 
             // icSide
             // 
@@ -161,6 +167,36 @@
             this.tpConfigPage.TabIndex = 0;
             this.tpConfigPage.Text = "Config";
             this.tpConfigPage.UseVisualStyleBackColor = true;
+            // 
+            // gbManualCapture
+            // 
+            this.gbManualCapture.Controls.Add(this.cbxManualRecordThis);
+            this.gbManualCapture.Controls.Add(this.tbManualOutputFile);
+            this.gbManualCapture.Controls.Add(this.btnManualCapture);
+            this.gbManualCapture.Location = new System.Drawing.Point(6, 183);
+            this.gbManualCapture.Name = "gbManualCapture";
+            this.gbManualCapture.Size = new System.Drawing.Size(143, 130);
+            this.gbManualCapture.TabIndex = 36;
+            this.gbManualCapture.TabStop = false;
+            this.gbManualCapture.Text = "Manual Capture";
+            // 
+            // cbxManualRecordThis
+            // 
+            this.cbxManualRecordThis.AutoSize = true;
+            this.cbxManualRecordThis.Location = new System.Drawing.Point(6, 45);
+            this.cbxManualRecordThis.Name = "cbxManualRecordThis";
+            this.cbxManualRecordThis.Size = new System.Drawing.Size(119, 17);
+            this.cbxManualRecordThis.TabIndex = 37;
+            this.cbxManualRecordThis.Text = "Record this capture";
+            this.cbxManualRecordThis.UseVisualStyleBackColor = true;
+            // 
+            // tbManualOutputFile
+            // 
+            this.tbManualOutputFile.Location = new System.Drawing.Point(6, 19);
+            this.tbManualOutputFile.Name = "tbManualOutputFile";
+            this.tbManualOutputFile.Size = new System.Drawing.Size(131, 20);
+            this.tbManualOutputFile.TabIndex = 36;
+            this.tbManualOutputFile.Text = "manualData.csv";
             // 
             // btnManualCapture
             // 
@@ -499,41 +535,31 @@
             this.tbRecordFilename.TabIndex = 0;
             this.tbRecordFilename.Text = "data.csv";
             // 
-            // gbManualCapture
+            // pictureBox1
             // 
-            this.gbManualCapture.Controls.Add(this.cbxManualRecordThis);
-            this.gbManualCapture.Controls.Add(this.tbManualOutputFile);
-            this.gbManualCapture.Controls.Add(this.btnManualCapture);
-            this.gbManualCapture.Location = new System.Drawing.Point(6, 183);
-            this.gbManualCapture.Name = "gbManualCapture";
-            this.gbManualCapture.Size = new System.Drawing.Size(143, 130);
-            this.gbManualCapture.TabIndex = 36;
-            this.gbManualCapture.TabStop = false;
-            this.gbManualCapture.Text = "Manual Capture";
+            this.pictureBox1.Location = new System.Drawing.Point(12, 482);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(240, 180);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
             // 
-            // tbManualOutputFile
+            // pictureBox2
             // 
-            this.tbManualOutputFile.Location = new System.Drawing.Point(6, 19);
-            this.tbManualOutputFile.Name = "tbManualOutputFile";
-            this.tbManualOutputFile.Size = new System.Drawing.Size(131, 20);
-            this.tbManualOutputFile.TabIndex = 36;
-            this.tbManualOutputFile.Text = "manualData.csv";
-            // 
-            // cbxManualRecordThis
-            // 
-            this.cbxManualRecordThis.AutoSize = true;
-            this.cbxManualRecordThis.Location = new System.Drawing.Point(6, 45);
-            this.cbxManualRecordThis.Name = "cbxManualRecordThis";
-            this.cbxManualRecordThis.Size = new System.Drawing.Size(119, 17);
-            this.cbxManualRecordThis.TabIndex = 37;
-            this.cbxManualRecordThis.Text = "Record this capture";
-            this.cbxManualRecordThis.UseVisualStyleBackColor = true;
+            this.pictureBox2.Location = new System.Drawing.Point(258, 482);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(240, 180);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
             // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(958, 476);
+            this.ClientSize = new System.Drawing.Size(958, 699);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tcTabControl);
             this.Controls.Add(this.pbSide);
             this.Controls.Add(this.pbMain);
@@ -550,6 +576,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbSide)).EndInit();
             this.tcTabControl.ResumeLayout(false);
             this.tpConfigPage.ResumeLayout(false);
+            this.gbManualCapture.ResumeLayout(false);
+            this.gbManualCapture.PerformLayout();
             this.gbCalibrationLoad.ResumeLayout(false);
             this.gbCalibrationLoad.PerformLayout();
             this.gbCalibrationCreate.ResumeLayout(false);
@@ -560,8 +588,8 @@
             this.groupBox1.PerformLayout();
             this.gbRecord.ResumeLayout(false);
             this.gbRecord.PerformLayout();
-            this.gbManualCapture.ResumeLayout(false);
-            this.gbManualCapture.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -611,6 +639,8 @@
         private System.Windows.Forms.GroupBox gbManualCapture;
         private System.Windows.Forms.CheckBox cbxManualRecordThis;
         private System.Windows.Forms.TextBox tbManualOutputFile;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 

@@ -75,6 +75,7 @@ namespace egads1
             // TODO: make this better. grain kernels arent rectangular solids.
             //mVolume = mLength * mWidth * mDepth;
 
+            // TODO: make this better. Grain kernels aren't ellipsoids
             //Volume of an ellipsoid = 4/3 * pi * radii a*b*c
             mVolume = (4D / 3D) * Math.PI * (mLength / 2D) * (mWidth / 2D) * (mDepth / 2D);
 

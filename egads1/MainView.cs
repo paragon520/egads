@@ -11,6 +11,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.Structure;
+using Emgu.CV.UI;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Util;
+
 namespace egads1
 {
     public partial class MainView : Form
@@ -19,6 +26,10 @@ namespace egads1
         public const string TEMPIMAGEMAIN2 = "tmpMain2.bmp";
         public const string TEMPIMAGESIDE = "tmpSide.bmp";
         public const string TEMPIMAGESIDE2 = "tmpSide2.bmp";
+
+        private Image<Bgr, Byte> blankFrame;
+        private Bitmap currentFrame;
+
 
 
         private MainController controller;
@@ -69,15 +80,18 @@ namespace egads1
                 icMain.Invoke(new icMain_ImageAvailable_delegate(icMain_ImageAvailable), sender, e);
             else
             {
+                    processFrame(icMain.ImageActiveBuffer.Bitmap);
                 try
                 {
-                    icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN);
-                    controller.imageAvailableMain(TEMPIMAGEMAIN);
+                    //icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN);
+                    //controller.imageAvailableMain(TEMPIMAGEMAIN);
+                    
+
                 }
                 catch (Exception ex)
                 {
-                    icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN2);
-                    controller.imageAvailableMain(TEMPIMAGEMAIN2);
+                    //icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN2);
+                    //controller.imageAvailableMain(TEMPIMAGEMAIN2);
                 }
             }
         }
@@ -184,5 +198,100 @@ namespace egads1
         {
             controller.command(Command.ManualCapture, tbManualOutputFile.Text, cbxManualRecordThis.Checked);
         }
+
+
+
+        private void processFrame(Bitmap i)
+        {
+            Bitmap temp0 = (Bitmap)i.Clone();
+            Image<Gray, Byte> temp = new Image<Gray, Byte>(temp0);
+            temp0.Dispose();
+
+            //if (blankFrame == null) blankFrame = temp.Clone();
+            //else
+            //{
+            //    CvInvoke.AbsDiff(blankFrame, temp, output);
+            //}
+
+
+            double average = temp.GetAverage().Intensity;
+            //displayData(average.ToString());
+
+            if (average > 30.0)
+            {
+                CvInvoke.Threshold(temp, temp, 62, 255, ThresholdType.Binary);
+
+                temp0 = temp.ToBitmap();
+                pictureBox1.Image = temp0;
+
+
+                //find largest contour
+                Mat result = new Mat(540, 720, 0, 1);
+                int largest_contour_index = 0;
+                double largest_area = 0;
+                VectorOfPoint largestContour;
+
+                VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+                Mat hierachy = new Mat();
+                CvInvoke.FindContours(temp, contours, hierachy, RetrType.Tree, ChainApproxMethod.ChainApproxNone);
+
+                if (contours.Size > 0)
+                {
+                    for (int ii = 0; ii < contours.Size; ii++)
+                    {
+                        MCvScalar color = new MCvScalar(0, 0, 255);
+
+                        double a = CvInvoke.ContourArea(contours[ii], false);  //  Find the area of contour
+                        if (a > largest_area)
+                        {
+                            largest_area = a;
+                            largest_contour_index = ii;                //Store the index of largest contour
+                        }
+
+                        //CvInvoke.DrawContours(result, contours, largest_contour_index, new MCvScalar(255, 0, 0));
+                    }
+
+
+                    //draw largest contour
+                    CvInvoke.DrawContours(result, contours, largest_contour_index, new MCvScalar(255, 255, 255), 1, LineType.EightConnected, hierachy);
+                    largestContour = new VectorOfPoint(contours[largest_contour_index].ToArray());
+
+
+                    Image<Bgr, Byte> tempImg = result.ToImage<Bgr, Byte>();
+
+                    //Find center point
+                    MCvMoments m = CvInvoke.Moments(largestContour, true);
+                    MCvPoint2D64f center = m.GravityCenter;
+                    //textBox1.AppendText("Center point: " + Math.Round(center.X, 3) + "px, " + Math.Round(center.Y, 3) + "px\n");
+                    tempImg.Draw(new Cross2DF(new PointF((float)center.X, (float)center.Y), 3, 3), new Bgr(0, 0, 255), 2);
+
+                    //Find Area
+                    //double area = CvInvoke.ContourArea(largestContour);
+                    //textBox1.AppendText("Area: " + area + "px,     " + convertSqPxToSqMm(area) + "sq mm\n");
+
+                    //Find Bounding Rectangle
+                    RotatedRect rect = CvInvoke.MinAreaRect(largestContour);
+                    //float width0 = rect.Size.Width;
+                    // height0 = rect.Size.Height;
+
+                    //float length = (height0 >= width0 ? height0 : width0);
+                    //float width = (height0 < width0 ? height0 : width0);
+
+                    tempImg.Draw(rect, new Bgr(255, 0, 0), 2);
+                    //textBox1.AppendText("Width: " + width + "px  Length: " + length + "px\n");
+                    //textBox1.AppendText("Width: " + convertPxToMm(width) + "mm  Length: " + convertPxToMm(length) + "mm\n");
+
+                    //double ratio = Math.Round((length / width), 3);
+                    //textBox1.AppendText("Ratio (width:length): 1:" + ratio + "\n");
+
+                    //save and display
+                    Bitmap temp1 = tempImg.ToBitmap();
+                    pictureBox2.Image = temp1;
+                }
+            
+            }
+
+        }
+
     }
 }
