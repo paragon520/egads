@@ -71,8 +71,8 @@
             this.btRecordStop = new System.Windows.Forms.Button();
             this.btRecordStart = new System.Windows.Forms.Button();
             this.tbRecordFilename = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pbMain2 = new System.Windows.Forms.PictureBox();
+            this.pbSide2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.icMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.icSide)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
@@ -86,18 +86,18 @@
             this.tpRunPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gbRecord.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMain2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSide2)).BeginInit();
             this.SuspendLayout();
             // 
             // tbOutput
             // 
-            this.tbOutput.Location = new System.Drawing.Point(13, 13);
+            this.tbOutput.Location = new System.Drawing.Point(12, 269);
             this.tbOutput.Multiline = true;
             this.tbOutput.Name = "tbOutput";
             this.tbOutput.ReadOnly = true;
             this.tbOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbOutput.Size = new System.Drawing.Size(485, 80);
+            this.tbOutput.Size = new System.Drawing.Size(733, 80);
             this.tbOutput.TabIndex = 0;
             // 
             // icMain
@@ -108,7 +108,7 @@
             this.icMain.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
             this.icMain.LiveCaptureContinuous = true;
             this.icMain.LiveDisplayPosition = new System.Drawing.Point(0, 0);
-            this.icMain.Location = new System.Drawing.Point(12, 99);
+            this.icMain.Location = new System.Drawing.Point(12, 355);
             this.icMain.Name = "icMain";
             this.icMain.Size = new System.Drawing.Size(240, 180);
             this.icMain.TabIndex = 1;
@@ -121,14 +121,15 @@
             this.icSide.DeviceLostExecutionMode = TIS.Imaging.EventExecutionMode.AsyncInvoke;
             this.icSide.ImageAvailableExecutionMode = TIS.Imaging.EventExecutionMode.MultiThreaded;
             this.icSide.LiveDisplayPosition = new System.Drawing.Point(0, 0);
-            this.icSide.Location = new System.Drawing.Point(258, 99);
+            this.icSide.Location = new System.Drawing.Point(13, 541);
             this.icSide.Name = "icSide";
             this.icSide.Size = new System.Drawing.Size(240, 180);
             this.icSide.TabIndex = 2;
+            this.icSide.ImageAvailable += new System.EventHandler<TIS.Imaging.ICImagingControl.ImageAvailableEventArgs>(this.icSide_ImageAvailable);
             // 
             // pbMain
             // 
-            this.pbMain.Location = new System.Drawing.Point(12, 285);
+            this.pbMain.Location = new System.Drawing.Point(258, 355);
             this.pbMain.Name = "pbMain";
             this.pbMain.Size = new System.Drawing.Size(240, 180);
             this.pbMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -137,7 +138,7 @@
             // 
             // pbSide
             // 
-            this.pbSide.Location = new System.Drawing.Point(258, 285);
+            this.pbSide.Location = new System.Drawing.Point(259, 541);
             this.pbSide.Name = "pbSide";
             this.pbSide.Size = new System.Drawing.Size(240, 180);
             this.pbSide.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -148,22 +149,21 @@
             // 
             this.tcTabControl.Controls.Add(this.tpConfigPage);
             this.tcTabControl.Controls.Add(this.tpRunPage);
-            this.tcTabControl.Location = new System.Drawing.Point(505, 13);
+            this.tcTabControl.Location = new System.Drawing.Point(12, 12);
             this.tcTabControl.Name = "tcTabControl";
             this.tcTabControl.SelectedIndex = 0;
-            this.tcTabControl.Size = new System.Drawing.Size(441, 452);
+            this.tcTabControl.Size = new System.Drawing.Size(733, 251);
             this.tcTabControl.TabIndex = 5;
             // 
             // tpConfigPage
             // 
-            this.tpConfigPage.Controls.Add(this.gbManualCapture);
             this.tpConfigPage.Controls.Add(this.gbCalibrationLoad);
             this.tpConfigPage.Controls.Add(this.gbCalibrationCreate);
             this.tpConfigPage.Controls.Add(this.gbCamSettings);
             this.tpConfigPage.Location = new System.Drawing.Point(4, 22);
             this.tpConfigPage.Name = "tpConfigPage";
             this.tpConfigPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tpConfigPage.Size = new System.Drawing.Size(433, 426);
+            this.tpConfigPage.Size = new System.Drawing.Size(725, 225);
             this.tpConfigPage.TabIndex = 0;
             this.tpConfigPage.Text = "Config";
             this.tpConfigPage.UseVisualStyleBackColor = true;
@@ -173,7 +173,7 @@
             this.gbManualCapture.Controls.Add(this.cbxManualRecordThis);
             this.gbManualCapture.Controls.Add(this.tbManualOutputFile);
             this.gbManualCapture.Controls.Add(this.btnManualCapture);
-            this.gbManualCapture.Location = new System.Drawing.Point(6, 183);
+            this.gbManualCapture.Location = new System.Drawing.Point(155, 6);
             this.gbManualCapture.Name = "gbManualCapture";
             this.gbManualCapture.Size = new System.Drawing.Size(143, 130);
             this.gbManualCapture.TabIndex = 36;
@@ -212,7 +212,7 @@
             // 
             this.gbCalibrationLoad.Controls.Add(this.lbCalibrationLoaded);
             this.gbCalibrationLoad.Controls.Add(this.btCalibrationLoad);
-            this.gbCalibrationLoad.Location = new System.Drawing.Point(155, 222);
+            this.gbCalibrationLoad.Location = new System.Drawing.Point(304, 6);
             this.gbCalibrationLoad.Name = "gbCalibrationLoad";
             this.gbCalibrationLoad.Size = new System.Drawing.Size(143, 73);
             this.gbCalibrationLoad.TabIndex = 34;
@@ -440,12 +440,13 @@
             // 
             // tpRunPage
             // 
+            this.tpRunPage.Controls.Add(this.gbManualCapture);
             this.tpRunPage.Controls.Add(this.groupBox1);
             this.tpRunPage.Controls.Add(this.gbRecord);
             this.tpRunPage.Location = new System.Drawing.Point(4, 22);
             this.tpRunPage.Name = "tpRunPage";
             this.tpRunPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tpRunPage.Size = new System.Drawing.Size(433, 426);
+            this.tpRunPage.Size = new System.Drawing.Size(725, 225);
             this.tpRunPage.TabIndex = 1;
             this.tpRunPage.Text = "Run ";
             this.tpRunPage.UseVisualStyleBackColor = true;
@@ -454,9 +455,9 @@
             // 
             this.groupBox1.Controls.Add(this.rbSortMode);
             this.groupBox1.Controls.Add(this.rbDataMode);
-            this.groupBox1.Location = new System.Drawing.Point(155, 6);
+            this.groupBox1.Location = new System.Drawing.Point(6, 103);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(143, 90);
+            this.groupBox1.Size = new System.Drawing.Size(143, 68);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Mode";
@@ -535,31 +536,31 @@
             this.tbRecordFilename.TabIndex = 0;
             this.tbRecordFilename.Text = "data.csv";
             // 
-            // pictureBox1
+            // pbMain2
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 482);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(240, 180);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
+            this.pbMain2.Location = new System.Drawing.Point(504, 355);
+            this.pbMain2.Name = "pbMain2";
+            this.pbMain2.Size = new System.Drawing.Size(240, 180);
+            this.pbMain2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbMain2.TabIndex = 6;
+            this.pbMain2.TabStop = false;
             // 
-            // pictureBox2
+            // pbSide2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(258, 482);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(240, 180);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 7;
-            this.pictureBox2.TabStop = false;
+            this.pbSide2.Location = new System.Drawing.Point(505, 541);
+            this.pbSide2.Name = "pbSide2";
+            this.pbSide2.Size = new System.Drawing.Size(240, 180);
+            this.pbSide2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbSide2.TabIndex = 7;
+            this.pbSide2.TabStop = false;
             // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(958, 699);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(758, 730);
+            this.Controls.Add(this.pbSide2);
+            this.Controls.Add(this.pbMain2);
             this.Controls.Add(this.tcTabControl);
             this.Controls.Add(this.pbSide);
             this.Controls.Add(this.pbMain);
@@ -588,8 +589,8 @@
             this.groupBox1.PerformLayout();
             this.gbRecord.ResumeLayout(false);
             this.gbRecord.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMain2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSide2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -639,8 +640,8 @@
         private System.Windows.Forms.GroupBox gbManualCapture;
         private System.Windows.Forms.CheckBox cbxManualRecordThis;
         private System.Windows.Forms.TextBox tbManualOutputFile;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pbMain2;
+        private System.Windows.Forms.PictureBox pbSide2;
     }
 }
 
