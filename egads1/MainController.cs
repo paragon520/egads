@@ -146,106 +146,111 @@ namespace egads1
             }
         }
 
-        public void imageAvailableMain(string filename)
+        public void imageAvailableMain(Bitmap frame)
         {
             //Bitmap temp = new Bitmap(filename);
             //mainView.postImageMain(temp);
 
-            ImageAnalysis tempAnalysis = mainAnalyser.analyse(filename); //Move to thread task?
-            mainView.postImageMain(tempAnalysis.Result);
+            ImageAnalysis tempAnalysis = mainAnalyser.analyse(frame); //Move to thread task?
 
-            currentGrain = new GrainAnalysis();
-            currentGrain.setMain(tempAnalysis);
-            
-            string output = "";
-            switch(currentState)
+            if (tempAnalysis.Result != null)
             {
-                case State.SampleARecord:
-                    //runSampleA.add(tempAnalysis);
-                    break;
-                case State.SampleBRecord:
-                    //runSampleB.add(tempAnalysis);
-                    break;
-                case State.DataRecord:
-                    //currentRun.add(tempAnalysis);
-                    break;
-                case State.Idle:
-                    break;
-            }
+                mainView.postImageMain(tempAnalysis.Result);
 
+                currentGrain = new GrainAnalysis();
+                currentGrain.setMain(tempAnalysis);
 
-            output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
-            output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
-            mainView.displayData(output);
-        }
-
-        public void imageAvailableSide(string filename)
-        {
-            //Bitmap temp = new Bitmap(filename);
-            //mainView.postImageSide(temp);
-
-            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename);
-            mainView.postImageSide(tempAnalysis2.Result);
-
-            string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
-            output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
-
-            mainView.displayData(output);
-
-            if (currentGrain != null)
-            {
-                currentGrain.setSide(tempAnalysis2);
-                currentGrain.analyse();
-
+                string output = "";
                 switch (currentState)
                 {
                     case State.SampleARecord:
                         //runSampleA.add(tempAnalysis);
-                        runSampleA.add(currentGrain);
                         break;
                     case State.SampleBRecord:
                         //runSampleB.add(tempAnalysis);
-                        runSampleB.add(currentGrain);
                         break;
                     case State.DataRecord:
                         //currentRun.add(tempAnalysis);
-                        currentRun.add(currentGrain);
                         break;
                     case State.Idle:
                         break;
                 }
 
 
-                output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+                output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+                output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+                mainView.displayData(output);
+            }
+        }
+
+        public void imageAvailableSide(Bitmap filename)
+        {
+            //Bitmap temp = new Bitmap(filename);
+            //mainView.postImageSide(temp);
+
+            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename);
+
+            if (tempAnalysis2.Result != null)
+            {
+
+                mainView.postImageSide(tempAnalysis2.Result);
+                string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
+                output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
+
                 mainView.displayData(output);
 
-                if (sort)
+                if (currentGrain != null)
                 {
-                    if (rejectAboveThreshold)
+                    currentGrain.setSide(tempAnalysis2);
+                    currentGrain.analyse();
+
+                    switch (currentState)
                     {
-                        if (currentGrain.Volume > threshold)
+                        case State.SampleARecord:
+                            //runSampleA.add(tempAnalysis);
+                            runSampleA.add(currentGrain);
+                            break;
+                        case State.SampleBRecord:
+                            //runSampleB.add(tempAnalysis);
+                            runSampleB.add(currentGrain);
+                            break;
+                        case State.DataRecord:
+                            //currentRun.add(tempAnalysis);
+                            currentRun.add(currentGrain);
+                            break;
+                        case State.Idle:
+                            break;
+                    }
+
+
+                    output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+                    mainView.displayData(output);
+
+                    if (sort)
+                    {
+                        if (rejectAboveThreshold)
                         {
-                            //reject
-                            mainView.displayData("Reject!");
-                            System.Media.SystemSounds.Asterisk.Play();
+                            if (currentGrain.Volume > threshold)
+                            {
+                                //reject
+                                mainView.displayData("Reject!");
+                                System.Media.SystemSounds.Asterisk.Play();
+                            }
+                        }
+                        else
+                        {
+                            if (currentGrain.Volume < threshold)
+                            {
+                                //reject
+                                mainView.displayData("Reject!");
+                                System.Media.SystemSounds.Asterisk.Play();
+
+                            }
                         }
                     }
-                    else
-                    {
-                        if (currentGrain.Volume < threshold)
-                        {
-                            //reject
-                            mainView.displayData("Reject!");
-                            System.Media.SystemSounds.Asterisk.Play();
-
-                        }
-                    }
-
+                    currentGrain = null;
                 }
-
-                currentGrain = null;
             }
-            
         }
 
         private void manualCapture(string outputFile, bool recordThis)
@@ -256,13 +261,13 @@ namespace egads1
             mainFile = mainCamera.manualCapture(mainFile);
             sideFile = sideCamera.manualCapture(sideFile);
 
-            ImageAnalysis mainAnalysis = mainAnalyser.analyse(mainFile); //Move to thread task?
+            ImageAnalysis mainAnalysis = mainAnalyser.analyse1(mainFile); //Move to thread task?
             mainView.postImageMain(mainAnalysis.Result);
             string output = "Main| C=(" + (int)mainAnalysis.Center.X + "px," + (int)mainAnalysis.Center.Y + "px), "
             + "A=" + (int)mainAnalysis.Area + ", W=" + (int)mainAnalysis.Width + ", L=" + (int)mainAnalysis.Length + ", R=1:" + mainAnalysis.Ratio;
             mainView.displayData(output);
             
-            ImageAnalysis sideAnalysis = sideAnalyser.analyse(sideFile, 100, 255, 0, 255, 120, 255);
+            ImageAnalysis sideAnalysis = sideAnalyser.analyse1(sideFile, 100, 255, 0, 255, 120, 255);
             mainView.postImageSide(sideAnalysis.Result);
             output = "Side| C=(" + (int)sideAnalysis.Center.X + "px," + (int)sideAnalysis.Center.Y + "px), "
             + "A=" + (int)sideAnalysis.Area + ", W=" + (int)sideAnalysis.Width + ", L=" + (int)sideAnalysis.Length + ", R=1:" + sideAnalysis.Ratio;

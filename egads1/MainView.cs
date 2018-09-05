@@ -86,15 +86,21 @@ namespace egads1
             }
             else
             {
-                Bitmap frame = (Bitmap)icMain.ImageActiveBuffer.Bitmap.Clone();
-                processFrameMain(frame);
-                frame.Dispose();
+                //Bitmap frame = (Bitmap)icMain.ImageActiveBuffer.Bitmap.Clone();
+                //processFrameMain(frame);
+                //frame.Dispose();
                 //processFrame(icMain.ImageActiveBuffer.Bitmap);
                 //icMain.ImageActiveBuffer.Bitmap.Dispose();
+
+                Bitmap frame = (Bitmap)icMain.ImageActiveBuffer.Bitmap.Clone();
+                controller.imageAvailableMain(frame);
+                frame.Dispose();
                 try
                 {
+
                     //icMain.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGEMAIN);
                     //controller.imageAvailableMain(TEMPIMAGEMAIN);
+
 
 
                 }
@@ -121,11 +127,14 @@ namespace egads1
             }
             else
             {
+                Bitmap frame = (Bitmap)icSide.ImageActiveBuffer.Bitmap.Clone();
+                controller.imageAvailableSide(frame);
+                frame.Dispose();
                 try
                 {
-                    Bitmap frame = (Bitmap)icSide.ImageActiveBuffer.Bitmap.Clone();
-                    processFrameSide(frame);
-                    frame.Dispose();
+                    //Bitmap frame = (Bitmap)icSide.ImageActiveBuffer.Bitmap.Clone();
+                    //processFrameSide(frame);
+                    //frame.Dispose();
                     //icSide.ImageActiveBuffer.SaveAsBitmap(TEMPIMAGESIDE);
                     //controller.imageAvailableSide(TEMPIMAGESIDE);
                 }

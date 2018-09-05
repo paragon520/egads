@@ -22,6 +22,8 @@ namespace egads1
         private int maskLumUpper = 95;
         private int maskLumLower = 255;
 
+        private double triggerThresh = 30.0;
+        private double areaThresh = 3000.0;
         private int maskLightLower = 85;
         private int maskLightUpper = 255;
         private int maskALower = 0;
@@ -35,12 +37,105 @@ namespace egads1
 
         }
 
-        public ImageAnalysis analyse(string fileName)
+        public ImageAnalysis analyse(Bitmap frame)
         {
-            return analyse(fileName, maskLightLower, maskLightUpper, maskALower, maskAUpper, maskBLower, maskBUpper);
+            return analyse(frame, triggerThresh, maskLightLower, maskLightUpper, maskALower, maskAUpper, maskBLower, maskBUpper);
         }
         
-        public ImageAnalysis analyse(string fileName, int lLow, int lHigh, int aLow, int aHigh, int bLow, int bHigh)
+        public ImageAnalysis analyse(Bitmap frame, double triggerThresh, int lLow, int lHigh, int aLow, int aHigh, int bLow, int bHigh)
+        {
+            ImageAnalysis analysis = new ImageAnalysis();
+
+            Image<Gray, Byte> grayFrame = new Image<Gray, Byte>(frame);
+            double trigger = grayFrame.GetAverage().Intensity;
+
+            if (trigger > triggerThresh)
+            {
+                CvInvoke.Threshold(grayFrame, grayFrame, 62, 255, ThresholdType.Binary);
+
+                Bitmap outputBmp = grayFrame.ToBitmap();
+                //pbMain.Image = outputBmp;
+
+
+                //find largest contour
+                using (Image<Bgr, Byte> resultMatrix = new Image<Bgr, byte>(720, 540))
+                {
+                    int largest_contour_index = 0;
+                    double largest_area = 0;
+                    VectorOfPoint largestContour;
+
+                    VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+                    Mat hierachy = new Mat();
+                    CvInvoke.FindContours(grayFrame, contours, hierachy, RetrType.Tree, ChainApproxMethod.ChainApproxNone);
+
+                    if (contours.Size > 0)
+                    {
+                        for (int ii = 0; ii < contours.Size; ii++)
+                        {
+                            MCvScalar color = new MCvScalar(0, 0, 255);
+
+                            double a = CvInvoke.ContourArea(contours[ii], false);  //  Find the area of contour
+                            if (a > largest_area)
+                            {
+                                largest_area = a;
+                                largest_contour_index = ii;                //Store the index of largest contour
+                            }
+                        }
+                        
+                        if (largest_area > areaThresh)
+                        {
+                            //draw largest contour
+                            CvInvoke.DrawContours(resultMatrix, contours, largest_contour_index, new MCvScalar(255, 255, 255), 1, LineType.EightConnected, hierachy);
+                            largestContour = new VectorOfPoint(contours[largest_contour_index].ToArray());
+
+                            //Find center point
+                            MCvMoments m = CvInvoke.Moments(largestContour, true);
+                            MCvPoint2D64f center = m.GravityCenter;
+                            //textBox1.AppendText("Center point: " + Math.Round(center.X, 3) + "px, " + Math.Round(center.Y, 3) + "px\n");
+                            resultMatrix.Draw(new Cross2DF(new PointF((float)center.X, (float)center.Y), 3, 3), new Bgr(0, 0, 255), 2);
+
+                            //Find Bounding Rectangle
+                            RotatedRect rect = CvInvoke.MinAreaRect(largestContour);
+                            resultMatrix.Draw(rect, new Bgr(255, 0, 0), 2);
+
+                            //save and display
+
+
+                            double area = CvInvoke.ContourArea(largestContour);
+                            float width0 = rect.Size.Width;
+                            float height0 = rect.Size.Height;
+                            float length = (height0 >= width0 ? height0 : width0);
+                            float width = (height0 < width0 ? height0 : width0);
+                            double ratio = Math.Round((length / width), 3);
+
+                            //resultMatrix.Save(fileName + "_after.bmp");
+                            analysis.Contours = contours;
+                            analysis.LargestContourIndex = largest_contour_index;
+                            analysis.LargestContour = largestContour;
+                            analysis.Center = center;
+                            analysis.Area = area;
+                            analysis.BoundingBox = rect;
+                            analysis.Length = length;
+                            analysis.Width = width;
+                            analysis.Ratio = ratio;
+
+                            outputBmp = resultMatrix.ToBitmap();
+                            analysis.Result = outputBmp;
+                            
+                            //pbMain2.Image = outputBmp;
+                        }
+                    }
+                }
+            }
+            return analysis;
+        }
+
+        public ImageAnalysis analyse1(string frame)
+        {
+            return analyse1(frame, maskLightLower, maskLightUpper, maskALower, maskAUpper, maskBLower, maskBUpper);
+        }
+
+        public ImageAnalysis analyse1(string fileName, int lLow, int lHigh, int aLow, int aHigh, int bLow, int bHigh)
         {
             ImageAnalysis analysis = new ImageAnalysis();
 
