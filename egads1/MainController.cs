@@ -30,6 +30,7 @@ namespace egads1
         double threshold;
         bool rejectAboveThreshold;
         private Stopwatch timer;
+        private List<GrainAnalysis> temp;
 
         public MainController(MainView m_mainView)
         {
@@ -41,6 +42,7 @@ namespace egads1
             currentState = State.Idle;
             sort = false;
             timer = new Stopwatch();
+            temp = new List<GrainAnalysis>();
         }
 
         public void setCameraControllers(TIS.Imaging.ICImagingControl mainIC, TIS.Imaging.ICImagingControl sideIC)
@@ -96,6 +98,8 @@ namespace egads1
                         currentRun.close();
                         currentRun = null;
                         timer.Stop();
+                        timer.Reset();
+                        temp.Clear();
                         mainView.displayData("Data recording stopped.");
                         break;
                     }
@@ -289,37 +293,81 @@ namespace egads1
             currentGrain.milliSec = timer.ElapsedMilliseconds;
 
             string output = "";
-            output += "Main| C=(" + (int)currentGrain.mainImage.Center.X + "px," + (int)currentGrain.mainImage.Center.Y + "px), ";
-            output += "A=" + (int)currentGrain.mainImage.Area + ", W=" + (int)currentGrain.mainImage.Width + ", L=" + (int)currentGrain.mainImage.Length + ", R=1:" + currentGrain.mainImage.Ratio;
-            mainView.displayData(output);
+            //output += "Main| C=(" + (int)currentGrain.mainImage.Center.X + "px," + (int)currentGrain.mainImage.Center.Y + "px), ";
+            //output += "A=" + (int)currentGrain.mainImage.Area + ", W=" + (int)currentGrain.mainImage.Width + ", L=" + (int)currentGrain.mainImage.Length + ", R=1:" + currentGrain.mainImage.Ratio;
+            //mainView.displayData(output);
 
-            output = "";
-            output += "Side| C=(" + (int)currentGrain.sideImage.Center.X + "px," + (int)currentGrain.sideImage.Center.Y + "px), ";
-            output += "A=" + (int)currentGrain.sideImage.Area + ", W=" + (int)currentGrain.sideImage.Width + ", L=" + (int)currentGrain.sideImage.Length + ", R=1:" + currentGrain.sideImage.Ratio;
-            mainView.displayData(output);
+            //output = "";
+            //output += "Side| C=(" + (int)currentGrain.sideImage.Center.X + "px," + (int)currentGrain.sideImage.Center.Y + "px), ";
+            //output += "A=" + (int)currentGrain.sideImage.Area + ", W=" + (int)currentGrain.sideImage.Width + ", L=" + (int)currentGrain.sideImage.Length + ", R=1:" + currentGrain.sideImage.Ratio;
+            //mainView.displayData(output);
             
-            output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+            output += "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+            
+
+            output += ", X=" + currentGrain.mainImage.Center.X + ", Time=" + currentGrain.milliSec;
             mainView.displayData(output);
 
-
-
-            switch (currentState)
+            if (temp.Count > 0)
             {
-                case State.SampleARecord:
-                    //runSampleA.add(tempAnalysis);
-                    runSampleA.add(currentGrain);
-                    break;
-                case State.SampleBRecord:
-                    //runSampleB.add(tempAnalysis);
-                    runSampleB.add(currentGrain);
-                    break;
-                case State.DataRecord:
-                    //currentRun.add(tempAnalysis);
-                    currentRun.add(currentGrain);
-                    break;
-                case State.Idle:
-                    break;
+
+                //mainView.displayData("Current x: " + currentGrain.mainImage.Center.X +", Last x: "+ temp.Last().mainImage.Center.X);
+                //mainView.displayData("Current time: " + currentGrain.milliSec + ", Last time: " + temp.Last().milliSec);
+                if (currentGrain.mainImage.Center.X > temp.Last().mainImage.Center.X || currentGrain.milliSec - temp.Last().milliSec > 200)
+                {
+                    double avgLength = 0;
+                    double avgWidth = 0;
+                    double avgDepth = 0;
+                    double avgArea = 0;
+                    double avgVolume = 0;
+                    if (temp.Count >= 3)
+                    {
+                        temp.RemoveAt(0);
+                        temp.RemoveAt(temp.Count - 1);
+                    }
+                    foreach (GrainAnalysis ga in temp)
+                    {
+                        avgLength += ga.Length;
+                        avgWidth += ga.Width;
+                        avgDepth += ga.Depth;
+                        avgArea += ga.CrossSectionArea;
+                        avgVolume += ga.Volume;
+                    }
+                    avgLength = avgLength / temp.Count;
+                    avgWidth = avgWidth / temp.Count;
+                    avgDepth = avgDepth / temp.Count;
+                    avgArea = avgArea / temp.Count;
+                    avgVolume = avgVolume / temp.Count;
+
+                    mainView.displayData("Avg| L=" + avgLength + ", W=" + avgWidth + ", D=" + avgDepth + ", V=" + avgVolume);
+
+                    Tuple<double, double, double, double, double, double, long> T =
+                        new Tuple<double, double, double, double, double, double, long>
+                        (avgLength, avgWidth, avgDepth, 0.0,
+                        avgArea, avgVolume, 0);
+
+                    switch (currentState)
+                    {
+                        case State.SampleARecord:
+                            //runSampleA.add(tempAnalysis);
+                            runSampleA.add(T);
+                            break;
+                        case State.SampleBRecord:
+                            //runSampleB.add(tempAnalysis);
+                            runSampleB.add(T);
+                            break;
+                        case State.DataRecord:
+                            //currentRun.add(tempAnalysis);
+                            currentRun.add(T);
+                            break;
+                        case State.Idle:
+                            break;
+                    }
+                    temp.Clear();
+
+                }
             }
+            temp.Add(currentGrain);
 
             currentGrain = new GrainAnalysis();
             //do sorting stuff
@@ -391,20 +439,20 @@ namespace egads1
                 //calculate average volume of each sample set
                 List<double> volumeSetA = new List<double>();
                 double meanVolumeA = 0;
-                foreach(GrainAnalysis ga in runSampleA.toList)
+                foreach(Tuple<double, double, double, double, double, double, long> ga in runSampleA.toList)
                 {
-                    meanVolumeA += ga.Volume;
-                    volumeSetA.Add(ga.Volume);
+                    meanVolumeA += ga.Item6;
+                    volumeSetA.Add(ga.Item6);
                 }
                 meanVolumeA = meanVolumeA / runSampleA.Length;
                 mainView.displayData("Set A mean: " + meanVolumeA);
 
                 List<double> volumeSetB = new List<double>();
                 double meanVolumeB = 0;
-                foreach (GrainAnalysis ga in runSampleB.toList)
+                foreach (Tuple<double, double, double, double, double, double, long> ga in runSampleB.toList)
                 {
-                    meanVolumeB += ga.Volume;
-                    volumeSetB.Add(ga.Volume);
+                    meanVolumeB += ga.Item6;
+                    volumeSetB.Add(ga.Item6);
                 }
                 meanVolumeB = meanVolumeB / runSampleB.Length;
                 mainView.displayData("Set B mean: " + meanVolumeB);
