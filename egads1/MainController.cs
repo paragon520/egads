@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace egads1
 {
@@ -27,6 +29,7 @@ namespace egads1
         private bool sort;
         double threshold;
         bool rejectAboveThreshold;
+        private Stopwatch timer;
 
         public MainController(MainView m_mainView)
         {
@@ -34,8 +37,10 @@ namespace egads1
             mainAnalyser = new ImageAnalyser();
             sideAnalyser = new ImageAnalyser();
             currentRun = new RunData();
+            currentGrain = new GrainAnalysis();
             currentState = State.Idle;
             sort = false;
+            timer = new Stopwatch();
         }
 
         public void setCameraControllers(TIS.Imaging.ICImagingControl mainIC, TIS.Imaging.ICImagingControl sideIC)
@@ -80,6 +85,7 @@ namespace egads1
                     {
                         currentState = State.DataRecord;
                         currentRun = new RunData();
+                        timer.Start();
                         mainView.displayData("Data recording started.");
                         break;
                     }
@@ -88,6 +94,8 @@ namespace egads1
                         currentState = State.Idle;
                         currentRun.setOutputFile(filename);
                         currentRun.close();
+                        currentRun = null;
+                        timer.Stop();
                         mainView.displayData("Data recording stopped.");
                         break;
                     }
@@ -95,6 +103,7 @@ namespace egads1
                     {
                         currentState = State.SampleARecord;
                         runSampleA = new RunData();
+                        timer.Start();
                         mainView.displayData("Sample A recording started.");
                         break;
                     }
@@ -103,6 +112,7 @@ namespace egads1
                         currentState = State.Idle;
                         runSampleA.setOutputFile("sampleA.csv");
                         runSampleA.close();
+                        timer.Stop();
                         mainView.displayData("Sample A recording stopped and saved.");
                         break;
                     }
@@ -110,6 +120,7 @@ namespace egads1
                     {
                         currentState = State.SampleBRecord;
                         runSampleB = new RunData();
+                        timer.Start();
                         mainView.displayData("Sample B recording started.");
                         break;
                     }
@@ -118,6 +129,7 @@ namespace egads1
                         currentState = State.Idle;
                         runSampleB.setOutputFile("sampleB.csv");
                         runSampleB.close();
+                        timer.Stop();
                         mainView.displayData("Sample B recording stopped and saved.");
                         break;
                     }
@@ -148,38 +160,43 @@ namespace egads1
 
         public void imageAvailableMain(Bitmap frame)
         {
-            //Bitmap temp = new Bitmap(filename);
-            //mainView.postImageMain(temp);
-
             ImageAnalysis tempAnalysis = mainAnalyser.analyse(frame); //Move to thread task?
 
             if (tempAnalysis.Result != null)
             {
                 mainView.postImageMain(tempAnalysis.Result);
 
-                currentGrain = new GrainAnalysis();
-                currentGrain.setMain(tempAnalysis);
+                currentGrain.mainImage = tempAnalysis;
 
-                string output = "";
-                switch (currentState)
+                if (currentGrain.SideIsSet())
                 {
-                    case State.SampleARecord:
-                        //runSampleA.add(tempAnalysis);
-                        break;
-                    case State.SampleBRecord:
-                        //runSampleB.add(tempAnalysis);
-                        break;
-                    case State.DataRecord:
-                        //currentRun.add(tempAnalysis);
-                        break;
-                    case State.Idle:
-                        break;
+                    runGrainAnalysis();
                 }
 
 
-                output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
-                output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
-                mainView.displayData(output);
+
+
+
+                //string output = "";
+                //switch (currentState)
+                //{
+                //    case State.SampleARecord:
+                //        //runSampleA.add(tempAnalysis);
+                //        break;
+                //    case State.SampleBRecord:
+                //        //runSampleB.add(tempAnalysis);
+                //        break;
+                //    case State.DataRecord:
+                //        //currentRun.add(tempAnalysis);
+                //        break;
+                //    case State.Idle:
+                //        break;
+                //}
+
+
+                //output += "Main| C=(" + (int)tempAnalysis.Center.X + "px," + (int)tempAnalysis.Center.Y + "px), ";
+                //output += "A=" + (int)tempAnalysis.Area + ", W=" + (int)tempAnalysis.Width + ", L=" + (int)tempAnalysis.Length + ", R=1:" + tempAnalysis.Ratio;
+                //mainView.displayData(output);
             }
         }
 
@@ -188,70 +205,128 @@ namespace egads1
             //Bitmap temp = new Bitmap(filename);
             //mainView.postImageSide(temp);
 
-            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename);
+            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename, 35.0, 100, 85, 255, 0, 255, 120, 255);
 
             if (tempAnalysis2.Result != null)
             {
-
                 mainView.postImageSide(tempAnalysis2.Result);
-                string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
-                output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
 
-                mainView.displayData(output);
+                currentGrain.sideImage = tempAnalysis2;
 
-                if (currentGrain != null)
+                if (currentGrain.MainIsSet())
                 {
-                    currentGrain.setSide(tempAnalysis2);
-                    currentGrain.analyse();
-
-                    switch (currentState)
-                    {
-                        case State.SampleARecord:
-                            //runSampleA.add(tempAnalysis);
-                            runSampleA.add(currentGrain);
-                            break;
-                        case State.SampleBRecord:
-                            //runSampleB.add(tempAnalysis);
-                            runSampleB.add(currentGrain);
-                            break;
-                        case State.DataRecord:
-                            //currentRun.add(tempAnalysis);
-                            currentRun.add(currentGrain);
-                            break;
-                        case State.Idle:
-                            break;
-                    }
-
-
-                    output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
-                    mainView.displayData(output);
-
-                    if (sort)
-                    {
-                        if (rejectAboveThreshold)
-                        {
-                            if (currentGrain.Volume > threshold)
-                            {
-                                //reject
-                                mainView.displayData("Reject!");
-                                System.Media.SystemSounds.Asterisk.Play();
-                            }
-                        }
-                        else
-                        {
-                            if (currentGrain.Volume < threshold)
-                            {
-                                //reject
-                                mainView.displayData("Reject!");
-                                System.Media.SystemSounds.Asterisk.Play();
-
-                            }
-                        }
-                    }
-                    currentGrain = null;
+                    runGrainAnalysis();
                 }
+
+
+
+
+
+
+
+                //string output = "Side| C=(" + (int)tempAnalysis2.Center.X + "px," + (int)tempAnalysis2.Center.Y + "px), ";
+                //output += "A=" + (int)tempAnalysis2.Area + ", W=" + (int)tempAnalysis2.Width + ", L=" + (int)tempAnalysis2.Length + ", R=1:" + tempAnalysis2.Ratio;
+
+                //mainView.displayData(output);
+
+                //if (currentGrain != null)
+                //{
+
+
+
+                //switch (currentState)
+                //{
+                //    case State.SampleARecord:
+                //        //runSampleA.add(tempAnalysis);
+                //        runSampleA.add(currentGrain);
+                //        break;
+                //    case State.SampleBRecord:
+                //        //runSampleB.add(tempAnalysis);
+                //        runSampleB.add(currentGrain);
+                //        break;
+                //    case State.DataRecord:
+                //        //currentRun.add(tempAnalysis);
+                //        currentRun.add(currentGrain);
+                //        break;
+                //    case State.Idle:
+                //        break;
+                //}
+
+
+                //    output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+                //    mainView.displayData(output);
+
+                //    if (sort)
+                //    {
+                //        if (rejectAboveThreshold)
+                //        {
+                //            if (currentGrain.Volume > threshold)
+                //            {
+                //                //reject
+                //                mainView.displayData("Reject!");
+                //                System.Media.SystemSounds.Asterisk.Play();
+                //            }
+                //        }
+                //        else
+                //        {
+                //            if (currentGrain.Volume < threshold)
+                //            {
+                //                //reject
+                //                mainView.displayData("Reject!");
+                //                System.Media.SystemSounds.Asterisk.Play();
+
+                //            }
+                //        }
+                //    }
+                //    currentGrain = null;
+                //}
             }
         }
+
+        private void runGrainAnalysis()
+        {
+            currentGrain.analyse();
+            currentGrain.milliSec = timer.ElapsedMilliseconds;
+
+            string output = "";
+            output += "Main| C=(" + (int)currentGrain.mainImage.Center.X + "px," + (int)currentGrain.mainImage.Center.Y + "px), ";
+            output += "A=" + (int)currentGrain.mainImage.Area + ", W=" + (int)currentGrain.mainImage.Width + ", L=" + (int)currentGrain.mainImage.Length + ", R=1:" + currentGrain.mainImage.Ratio;
+            mainView.displayData(output);
+
+            output = "";
+            output += "Side| C=(" + (int)currentGrain.sideImage.Center.X + "px," + (int)currentGrain.sideImage.Center.Y + "px), ";
+            output += "A=" + (int)currentGrain.sideImage.Area + ", W=" + (int)currentGrain.sideImage.Width + ", L=" + (int)currentGrain.sideImage.Length + ", R=1:" + currentGrain.sideImage.Ratio;
+            mainView.displayData(output);
+            
+            output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
+            mainView.displayData(output);
+
+
+
+            switch (currentState)
+            {
+                case State.SampleARecord:
+                    //runSampleA.add(tempAnalysis);
+                    runSampleA.add(currentGrain);
+                    break;
+                case State.SampleBRecord:
+                    //runSampleB.add(tempAnalysis);
+                    runSampleB.add(currentGrain);
+                    break;
+                case State.DataRecord:
+                    //currentRun.add(tempAnalysis);
+                    currentRun.add(currentGrain);
+                    break;
+                case State.Idle:
+                    break;
+            }
+
+            currentGrain = new GrainAnalysis();
+            //do sorting stuff
+
+        }
+
+
 
         private void manualCapture(string outputFile, bool recordThis)
         {
@@ -274,8 +349,8 @@ namespace egads1
             mainView.displayData(output);
             
             currentGrain = new GrainAnalysis();
-            currentGrain.setMain(mainAnalysis);
-            currentGrain.setSide(sideAnalysis);
+            currentGrain.mainImage = mainAnalysis;
+            currentGrain.sideImage = sideAnalysis;
             currentGrain.analyse();
 
             output = "Grain| L=" + currentGrain.Length + ", W=" + currentGrain.Width + ", D=" + currentGrain.Depth + ", V=" + currentGrain.Volume;
@@ -284,8 +359,8 @@ namespace egads1
 
             if (recordThis)
             {
-                string header = "Length(mm),Width(mm),Depth(mm),Area(mm^2),Volume(mm^3)\n";
-                string line = currentGrain.Length + "," + currentGrain.Width + "," + currentGrain.Depth + "," 
+                string header = "Length(mm),Width(mm),Depth(mm),Centerpoint(Xpixels),Area(mm^2),Volume(mm^3)\n";
+                string line = currentGrain.Length + "," + currentGrain.Width + "," + currentGrain.Depth + "," + currentGrain.mainImage.Center.X + ","
                     + currentGrain.CrossSectionArea + "," + currentGrain.Volume+ "\n";
 
                 //check if file exists, if not create with header

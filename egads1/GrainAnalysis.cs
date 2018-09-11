@@ -9,10 +9,10 @@ namespace egads1
 {
     class GrainAnalysis
     {
-        private ImageAnalysis mainImage;
-        private ImageAnalysis sideImage;
+        public ImageAnalysis mainImage { get; set; }
+        public ImageAnalysis sideImage { get; set; }
         double pxPerCm;
-
+        public long milliSec { get; set; }
         private double mCrossSectionArea;
         private double mLength;
         private double mWidth;
@@ -20,7 +20,8 @@ namespace egads1
         private double mVolume;
         private double mMainAngle;
         private double mSideAngle;
-
+       
+ 
         public double CrossSectionArea { get => mCrossSectionArea;  }
         public double Length { get => mLength;  }
         public double Width { get => mWidth; }
@@ -29,9 +30,10 @@ namespace egads1
         public double MainAngle { get => mMainAngle; }
         public double SideAngle { get => mSideAngle; }
 
+
         public GrainAnalysis()
         {
-            pxPerCm = 239;
+            pxPerCm = 441.3;
 
         }
 
@@ -44,17 +46,6 @@ namespace egads1
         {
             return (sideImage != null);
         }
-
-        public void setMain(ImageAnalysis ia)
-        {
-            mainImage = ia;
-        }
-
-        public void setSide(ImageAnalysis ia)
-        {
-            sideImage = ia;
-        }
-
         public void analyse()
         {
             mLength = convertPxToMm((mainImage.Length >= sideImage.Length) ? mainImage.Length : sideImage.Length);

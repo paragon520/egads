@@ -15,12 +15,14 @@ namespace egads1
         // will likely need a new data holder class for it.
 
         //List<ImageAnalysis> store;
-        List<GrainAnalysis> store;
+        private List<GrainAnalysis> store;
         //List<Tuple<ImageAnalysis, ImageAnalysis>> newStore;
         //Tuple<ImageAnalysis, ImageAnalysis> currentSet;
         string outputFile;
         decimal pxPerCm;
 
+        public int Length { get => store.Count; }
+        public List<GrainAnalysis> toList { get => store; }
 
         public RunData()
         {
@@ -44,12 +46,12 @@ namespace egads1
         public void close()
         {
             //string data = "Width(mm),Length(mm),Area(mm2),Ratio\n"
-            string data = "Length(mm),Width(mm),Depth(mm),Area(mm^2),Volume(mm^3),Main Angle, Side Angle\n";
+            string data = "Length(mm),Width(mm),Depth(mm),CenterMainX(px),Area(mm^2),Volume(mm^3),Time(millisec)\n";
             foreach (GrainAnalysis ga in store)
             {
                 //data += convertPxToMm(ia.Width) + "," + convertPxToMm(ia.Length) + "," + convertSqPxToSqMm(ia.Area) + "," + ia.Ratio + "\n";
-                data += ga.Length + "," + ga.Width + "," + ga.Depth + "," 
-                    + ga.CrossSectionArea + "," + ga.Volume + "," + ga.MainAngle + "," + ga.SideAngle + "\n";
+                data += ga.Length + "," + ga.Width + "," + ga.Depth + "," + ga.mainImage.Center.X + ","
+                    + ga.CrossSectionArea + "," + ga.Volume + "," + ga.milliSec + "\n";
             }
 
             try
@@ -82,7 +84,5 @@ namespace egads1
             return Math.Round((decimal)pixels / cbPxPerCbCm * 1000, 3);
         }
 
-        public int Length { get => store.Count; }
-        public List<GrainAnalysis> toList { get => store; }
     }
 }

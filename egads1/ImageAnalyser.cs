@@ -24,6 +24,7 @@ namespace egads1
 
         private double triggerThresh = 30.0;
         private double areaThresh = 3000.0;
+        private int grayThresh = 62;
         private int maskLightLower = 85;
         private int maskLightUpper = 255;
         private int maskALower = 0;
@@ -39,10 +40,10 @@ namespace egads1
 
         public ImageAnalysis analyse(Bitmap frame)
         {
-            return analyse(frame, triggerThresh, maskLightLower, maskLightUpper, maskALower, maskAUpper, maskBLower, maskBUpper);
+            return analyse(frame, triggerThresh, grayThresh, maskLightLower, maskLightUpper, maskALower, maskAUpper, maskBLower, maskBUpper);
         }
         
-        public ImageAnalysis analyse(Bitmap frame, double triggerThresh, int lLow, int lHigh, int aLow, int aHigh, int bLow, int bHigh)
+        public ImageAnalysis analyse(Bitmap frame, double triggerThresh, int grayThresh, int lLow, int lHigh, int aLow, int aHigh, int bLow, int bHigh)
         {
             ImageAnalysis analysis = new ImageAnalysis();
 
@@ -51,7 +52,7 @@ namespace egads1
 
             if (trigger > triggerThresh)
             {
-                CvInvoke.Threshold(grayFrame, grayFrame, 62, 255, ThresholdType.Binary);
+                CvInvoke.Threshold(grayFrame, grayFrame, grayThresh, 255, ThresholdType.Binary);
 
                 Bitmap outputBmp = grayFrame.ToBitmap();
                 //pbMain.Image = outputBmp;
