@@ -108,21 +108,23 @@ namespace egads1
                             float length = (height0 >= width0 ? height0 : width0);
                             float width = (height0 < width0 ? height0 : width0);
                             double ratio = Math.Round((length / width), 3);
+                            if (length > 132)
+                            {
+                                //resultMatrix.Save(fileName + "_after.bmp");
+                                analysis.Contours = contours;
+                                analysis.LargestContourIndex = largest_contour_index;
+                                analysis.LargestContour = largestContour;
+                                analysis.Center = center;
+                                analysis.Area = area;
+                                analysis.BoundingBox = rect;
+                                analysis.Length = length;
+                                analysis.Width = width;
+                                analysis.Ratio = ratio;
 
-                            //resultMatrix.Save(fileName + "_after.bmp");
-                            analysis.Contours = contours;
-                            analysis.LargestContourIndex = largest_contour_index;
-                            analysis.LargestContour = largestContour;
-                            analysis.Center = center;
-                            analysis.Area = area;
-                            analysis.BoundingBox = rect;
-                            analysis.Length = length;
-                            analysis.Width = width;
-                            analysis.Ratio = ratio;
+                                outputBmp = resultMatrix.ToBitmap();
+                                analysis.Result = outputBmp;
+                            }
 
-                            outputBmp = resultMatrix.ToBitmap();
-                            analysis.Result = outputBmp;
-                            
                             //pbMain2.Image = outputBmp;
                         }
                     }

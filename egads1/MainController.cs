@@ -87,16 +87,21 @@ namespace egads1
                     {
                         currentState = State.DataRecord;
                         currentRun = new RunData();
+                        temp.Clear();
                         timer.Start();
                         mainView.displayData("Data recording started.");
                         break;
                     }
                 case Command.RecordStop:
                     {
+                        averageGrainAnalyses();
                         currentState = State.Idle;
                         currentRun.setOutputFile(filename);
-                        currentRun.close();
-                        currentRun = null;
+                        if (currentRun.close())
+                        {
+                            currentRun = null;
+                        }
+
                         timer.Stop();
                         timer.Reset();
                         temp.Clear();
@@ -107,16 +112,20 @@ namespace egads1
                     {
                         currentState = State.SampleARecord;
                         runSampleA = new RunData();
+                        temp.Clear();
                         timer.Start();
                         mainView.displayData("Sample A recording started.");
                         break;
                     }
                 case Command.RecordAStop:
                     {
+                        averageGrainAnalyses();
                         currentState = State.Idle;
                         runSampleA.setOutputFile("sampleA.csv");
                         runSampleA.close();
                         timer.Stop();
+                        timer.Reset();
+                        temp.Clear();
                         mainView.displayData("Sample A recording stopped and saved.");
                         break;
                     }
@@ -124,16 +133,20 @@ namespace egads1
                     {
                         currentState = State.SampleBRecord;
                         runSampleB = new RunData();
+                        temp.Clear();
                         timer.Start();
                         mainView.displayData("Sample B recording started.");
                         break;
                     }
                 case Command.RecordBStop:
                     {
+                        averageGrainAnalyses();
                         currentState = State.Idle;
                         runSampleB.setOutputFile("sampleB.csv");
                         runSampleB.close();
                         timer.Stop();
+                        timer.Reset();
+                        temp.Clear();
                         mainView.displayData("Sample B recording stopped and saved.");
                         break;
                     }
@@ -172,9 +185,13 @@ namespace egads1
 
                 currentGrain.mainImage = tempAnalysis;
 
+
                 if (currentGrain.SideIsSet())
                 {
-                    runGrainAnalysis();
+                    if (Math.Abs(tempAnalysis.Center.X - currentGrain.sideImage.Center.X) > 100)
+                        currentGrain.sideImage = null;
+                    else
+                        runGrainAnalysis();
                 }
 
 
@@ -209,17 +226,20 @@ namespace egads1
             //Bitmap temp = new Bitmap(filename);
             //mainView.postImageSide(temp);
 
-            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename, 35.0, 100, 85, 255, 0, 255, 120, 255);
+            ImageAnalysis tempAnalysis2 = sideAnalyser.analyse(filename, 25.0, 100, 85, 255, 0, 255, 120, 255);
 
             if (tempAnalysis2.Result != null)
             {
                 mainView.postImageSide(tempAnalysis2.Result);
-
+                
                 currentGrain.sideImage = tempAnalysis2;
 
                 if (currentGrain.MainIsSet())
                 {
-                    runGrainAnalysis();
+                    if (Math.Abs(tempAnalysis2.Center.X - currentGrain.mainImage.Center.X) > 100)
+                        currentGrain.mainImage = null;
+                    else 
+                        runGrainAnalysis();
                 }
 
 
@@ -313,61 +333,17 @@ namespace egads1
 
                 //mainView.displayData("Current x: " + currentGrain.mainImage.Center.X +", Last x: "+ temp.Last().mainImage.Center.X);
                 //mainView.displayData("Current time: " + currentGrain.milliSec + ", Last time: " + temp.Last().milliSec);
-                if (currentGrain.mainImage.Center.X > temp.Last().mainImage.Center.X || currentGrain.milliSec - temp.Last().milliSec > 200)
+                if ((currentGrain.mainImage.Center.X - temp.Last().mainImage.Center.X > 10) || (currentGrain.milliSec - temp.Last().milliSec > 200))
                 {
-                    double avgLength = 0;
-                    double avgWidth = 0;
-                    double avgDepth = 0;
-                    double avgArea = 0;
-                    double avgVolume = 0;
-                    if (temp.Count >= 3)
-                    {
-                        temp.RemoveAt(0);
-                        temp.RemoveAt(temp.Count - 1);
-                    }
-                    foreach (GrainAnalysis ga in temp)
-                    {
-                        avgLength += ga.Length;
-                        avgWidth += ga.Width;
-                        avgDepth += ga.Depth;
-                        avgArea += ga.CrossSectionArea;
-                        avgVolume += ga.Volume;
-                    }
-                    avgLength = avgLength / temp.Count;
-                    avgWidth = avgWidth / temp.Count;
-                    avgDepth = avgDepth / temp.Count;
-                    avgArea = avgArea / temp.Count;
-                    avgVolume = avgVolume / temp.Count;
-
-                    mainView.displayData("Avg| L=" + avgLength + ", W=" + avgWidth + ", D=" + avgDepth + ", V=" + avgVolume);
-
-                    Tuple<double, double, double, double, double, double, long> T =
-                        new Tuple<double, double, double, double, double, double, long>
-                        (avgLength, avgWidth, avgDepth, 0.0,
-                        avgArea, avgVolume, 0);
-
-                    switch (currentState)
-                    {
-                        case State.SampleARecord:
-                            //runSampleA.add(tempAnalysis);
-                            runSampleA.add(T);
-                            break;
-                        case State.SampleBRecord:
-                            //runSampleB.add(tempAnalysis);
-                            runSampleB.add(T);
-                            break;
-                        case State.DataRecord:
-                            //currentRun.add(tempAnalysis);
-                            currentRun.add(T);
-                            break;
-                        case State.Idle:
-                            break;
-                    }
-                    temp.Clear();
+                    averageGrainAnalyses();
 
                 }
             }
             temp.Add(currentGrain);
+
+            currentGrain.mainImage.Result.Save(currentGrain.milliSec + "main.bmp");
+            currentGrain.sideImage.Result.Save(currentGrain.milliSec + "side.bmp");
+
 
             currentGrain = new GrainAnalysis();
             //do sorting stuff
@@ -375,6 +351,62 @@ namespace egads1
         }
 
 
+        private void averageGrainAnalyses()
+        {
+            if (temp.Count > 0)
+            {
+                double avgLength = 0;
+                double avgWidth = 0;
+                double avgDepth = 0;
+                double avgArea = 0;
+                double avgVolume = 0;
+                if (temp.Count >= 3)
+                {
+                    temp.RemoveAt(0);
+                    temp.RemoveAt(temp.Count - 1);
+                }
+                foreach (GrainAnalysis ga in temp)
+                {
+                    avgLength += ga.Length;
+                    avgWidth += ga.Width;
+                    avgDepth += ga.Depth;
+                    avgArea += ga.CrossSectionArea;
+                    avgVolume += ga.Volume;
+                }
+                avgLength = avgLength / temp.Count;
+                avgWidth = avgWidth / temp.Count;
+                avgDepth = avgDepth / temp.Count;
+                avgArea = avgArea / temp.Count;
+                avgVolume = avgVolume / temp.Count;
+
+                mainView.displayData("Avg| L=" + avgLength + ", W=" + avgWidth + ", D=" + avgDepth + ", V=" + avgVolume);
+
+                Tuple<double, double, double, double, double> T =
+                    new Tuple<double, double, double, double, double>
+                    (avgLength, avgWidth, avgDepth, avgArea, avgVolume);
+
+                switch (currentState)
+                {
+                    case State.SampleARecord:
+                        //runSampleA.add(tempAnalysis);
+                        runSampleA.add(T);
+                        break;
+                    case State.SampleBRecord:
+                        //runSampleB.add(tempAnalysis);
+                        runSampleB.add(T);
+                        break;
+                    case State.DataRecord:
+                        //currentRun.add(tempAnalysis);
+                        currentRun.add(T);
+                        break;
+                    case State.Idle:
+                        break;
+                }
+                temp.Clear();
+            }
+            
+        }
+         
 
         private void manualCapture(string outputFile, bool recordThis)
         {
@@ -439,20 +471,20 @@ namespace egads1
                 //calculate average volume of each sample set
                 List<double> volumeSetA = new List<double>();
                 double meanVolumeA = 0;
-                foreach(Tuple<double, double, double, double, double, double, long> ga in runSampleA.toList)
+                foreach(Tuple<double, double, double, double, double> ga in runSampleA.toList)
                 {
-                    meanVolumeA += ga.Item6;
-                    volumeSetA.Add(ga.Item6);
+                    meanVolumeA += ga.Item5;
+                    volumeSetA.Add(ga.Item5);
                 }
                 meanVolumeA = meanVolumeA / runSampleA.Length;
                 mainView.displayData("Set A mean: " + meanVolumeA);
 
                 List<double> volumeSetB = new List<double>();
                 double meanVolumeB = 0;
-                foreach (Tuple<double, double, double, double, double, double, long> ga in runSampleB.toList)
+                foreach (Tuple<double, double, double, double, double> ga in runSampleB.toList)
                 {
-                    meanVolumeB += ga.Item6;
-                    volumeSetB.Add(ga.Item6);
+                    meanVolumeB += ga.Item5;
+                    volumeSetB.Add(ga.Item5);
                 }
                 meanVolumeB = meanVolumeB / runSampleB.Length;
                 mainView.displayData("Set B mean: " + meanVolumeB);
